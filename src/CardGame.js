@@ -23,12 +23,10 @@ export class CardGame {
 
     fillScene(){
         const scene = this.scene;
-        // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), scene);
 
         const sphere = BABYLON.MeshBuilder.CreateSphere('sphere', {segments:16, diameter:2}, scene);
 
-        // Move the sphere upward 1/2 of its height.
         sphere.position.y = 1;
 
         const ground = BABYLON.MeshBuilder.CreateGround('ground1', {height:6, width:6, subdivisions: 2}, scene);
@@ -46,7 +44,6 @@ export class CardGame {
         const scene = this.scene;
         const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
 
-        // Target the camera to scene origin.
         camera.setTarget(BABYLON.Vector3.Zero());
 
         camera.attachControl(canvas, false);
