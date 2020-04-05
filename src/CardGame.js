@@ -49,7 +49,43 @@ export class CardGame {
         scene.beginAnimation(skeleton, animation.from, animation.to, true);
     }
 
+    initGamepad(){
+        const gamepadManager = new BABYLON.GamepadManager();
+        gamepadManager.onGamepadConnectedObservable.add((gamepad, state)=>{
+            console.log('onGamepadConnectedObservable',gamepad, state);
+            gamepad.onButtonDownObservable.add((button, state)=>{
+                //Button has been pressed
+                console.log(button);
+                switch (button) {
+                    case 0:
+                        this.walk();
+                        break;
+                    case 1:
+                        this.right();
+                        break;
+                    case 2:
+                        this.left();
+                        break;
+                    case 3:
+                        this.run();
+                        break;
 
+                }
+            });
+            gamepad.onButtonUpObservable.add((button, state) => {
+                this.idle();
+            });
+            gamepad.onleftstickchanged((values)=>{
+                //Left stick has been moved
+                console.log(values.x+" "+values.y)
+            });
+        });
+        gamepadManager.onGamepadDisconnectedObservable.add((gamepad, state)=>{
+            console.log('onGamepadDisconnectedObservable');
+        });
+
+        this.gamepadManager = gamepadManager;
+    }
     loadObject(){
         const engine = this.engine;
         const scene = this.scene;
@@ -202,6 +238,7 @@ export class CardGame {
             UiPanel.addControl(button1);*/
 
             engine.hideLoadingUI();
+                this.initGamepad();
         });
 
     }
@@ -227,13 +264,19 @@ export class CardGame {
     initCamera() {
         const canvas = this.canvas;
         const scene = this.scene;
-        var camera = new BABYLON.ArcRotateCamera("camera1", Math.PI / 2, Math.PI / 4, 3, new BABYLON.Vector3(0, 1, 0), scene);
+        var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 1, 2), scene);
         camera.attachControl(canvas, true);
 
         camera.lowerRadiusLimit = 2;
         camera.upperRadiusLimit = 10;
-        camera.wheelDeltaPercentage = 0.01;
-
+        camera.wheelDeltaPercentage = 0.001;
+        // Object.assign(camera.position, { x: 0, y: -10, })
+        // const cameraProps = {
+        //     "rotation": {"x": 0, "y": -3.27, "z": 0},
+        //     "position": {"x": -0.25, "y": 1, "z": 3.73}
+        // };
+        // Object.assign(camera.rotation, cameraProps.rotation);
+        // Object.assign(camera.position, cameraProps.position);
         this.camera = camera;
     }
 
