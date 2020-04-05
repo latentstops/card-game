@@ -19,6 +19,7 @@ export class CardGame {
         this.initCamera();
         this.connectHandlers();
         this.fillScene();
+        this.render();
     }
 
     fillScene(){
