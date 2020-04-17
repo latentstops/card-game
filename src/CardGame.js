@@ -116,19 +116,12 @@ export class CardGame {
     initUniversalCamera() {
         const canvas = this.canvas;
         const scene = this.scene;
-        var camera = new BABYLON.UniversalCamera("UniversalCamera", new BABYLON.Vector3(0, 1, 2), scene);
-        camera.attachControl(canvas, true);
+        const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
 
-        camera.lowerRadiusLimit = 2;
-        camera.upperRadiusLimit = 10;
-        camera.wheelDeltaPercentage = 0.001;
-        // Object.assign(camera.position, { x: 0, y: -10, })
-        // const cameraProps = {
-        //     "rotation": {"x": 0, "y": -3.27, "z": 0},
-        //     "position": {"x": -0.25, "y": 1, "z": 3.73}
-        // };
-        // Object.assign(camera.rotation, cameraProps.rotation);
-        // Object.assign(camera.position, cameraProps.position);
+        camera.setTarget(BABYLON.Vector3.Zero());
+
+        camera.attachControl(canvas, false);
+
         this.camera = camera;
     }
 
