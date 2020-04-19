@@ -27,7 +27,8 @@ export class CardGame {
         // this.initHakagaz();
         this.initGameModels();
         this.render();
-        this.downDebugLayerIfExists();
+        this.applyMotionBlurEffect();
+        // this.downDebugLayerIfExists();
     }
 
     render(){
@@ -36,6 +37,21 @@ export class CardGame {
         engine.runRenderLoop(() => {
             scene.render();
         });
+    }
+
+
+    applyMotionBlurEffect(){
+        const scene = this.scene;
+        const camera = this.camera;
+        const motionblur = new BABYLON.MotionBlurPostProcess(
+            "mb", // The name of the effect.
+            scene, // The scene containing the objects to blur according to their velocity.
+            1.0, // The required width/height ratio to downsize to before computing the render pass.
+            camera // The camera to apply the render pass to.
+        );
+        // motionblur.motionStrength = 2;
+        // motionblur.motionBlurSamples = 64;
+        this.motionblur = motionblur;
     }
 
     initGameModels(){

@@ -18,6 +18,7 @@ export class CardGameModels {
         const scene = this.scene;
         BABYLON.SceneLoader.ImportMesh('','/', 'models/standard/table/blackjack_table.incremental.449b4.babylon', scene, (tableMeshes) => {
             this.tableMeshes = tableMeshes;
+
         });
     }
 
@@ -31,37 +32,76 @@ export class CardGameModels {
             this.setupFaceUV();
             this.setFrameToCardFaceSide(0,2);
             this.generate();
+            this.correctDefaultLight(scene);
+            this.setCardBackside();
         });        
         
     }
 
+    setCardBackside() {
+        const texture = this.cardFace.material.diffuseTexture.clone();
+        const material = this.cardFace.material.clone();
+        material.texture = texture;
+
+        this.cardBack.material = material;
+
+        const map = this.finMapByName('backside');
+        this.setFaceByXY(map.args[0], map.args[1], cardGame.models.cardBack);
+    }
+
+    correctDefaultLight(scene) {
+        const defaultLight = scene.getLightByID("default light");
+        defaultLight.direction.x = Math.PI / 2;
+
+        this.parent.defaultLight = defaultLight;
+    }
+
     random(count = 100, interval = 50){
+        const camera = this.camera;
         let counter = 0;
-        (function randomize(){
-            let x = Math.floor( Math.random() * 13 );
-            let y = Math.floor( Math.random() * 5 );
-            cardGame.models.setFaceFromXY(x,y);
-            if(counter === count) return;
-            setTimeout(randomize, interval);
+        let animationFrameID = null;
+        this.random.alpha = 0.55;
+        (function randomize(self) {
+            let x = Math.floor(Math.random() * 11);
+            let y = Math.floor(Math.random() * 4);
+            cardGame.models.setFaceByXY(x, y);
+
+            camera.alpha += counter > count / 2 ? self.random.alpha * 2 : self.random.alpha;
+
+            if (counter === count) {
+                camera.alpha = Math.PI / 2;
+                return cancelAnimationFrame(animationFrameID);
+            }
+
+            animationFrameID = requestAnimationFrame(randomize.bind(null,self));
             counter++;
+        })(this);
+
+        (function changeCameraView() {
+            setTimeout(changeCameraView, interval);
         })();
     }
 
     setFaceByName(name){
+        const map = this.finMapByName(name);
+        this.setFaceByXY(...map.args);
+    }
+
+    finMapByName(name) {
         const nameMap = this.nameMap;
-        const map = nameMap.find( map => map.name.toLowerCase() === name.toLowerCase() );
-        this.setFaceFromXY(...map.args);
+        const map = nameMap.find(map => map.name.toLowerCase() === name.toLowerCase());
+        return map;
     }
 
-    setFaceFromXY( x, y ){
+    setFaceByXY( x, y, mesh ){
         const Y = 6 - y;
-        this.setFrameToCardFaceSide(x, Y);
+        this.setFrameToCardFaceSide(x, Y, mesh);
     }
 
-    setFrameToCardFaceSide(x,y){
+    setFrameToCardFaceSide(x,y, mesh){
         this.x = x;
         this.y = y;
-        const card = this.cardFace;
+        const card = mesh || this.cardFace;
         const faceUV = this.faceUV;
         const cardTexture = card.material.diffuseTexture;
         const uOffset = faceUV.uOffset;
