@@ -28,24 +28,18 @@ cardGame.start().then( () =>{
             newCard.cardFace.parent = cardGroup;
         }
     }
-    // const cards = Array(52).fill().reduce( (acc, item, index) => {
-    //     const lastCard = acc[acc.length - 1];
-    //     const newCard = lastCard.clone();
-    //
-    //     newCard.position.z = -Math.floor(index / 13) * 10;
-    //     newCard.position.x = Math.floor(index / 13) * 7;
-    //
-    //     acc.push( newCard );
-    //     return acc;
-    // }, [ card ] );
+
     cards.forEach( (card, index) => card.setFaceTo(cardNameMap[index].name)  );
-    // cardNameMap.forEach( ({name}, index) => cards[index].setFaceTo(name)  );
-    cards[0].cardFace.visibility = false;
-    cards[0].cardBack.visibility = false;
-    cards[0].cardFace.pickable = false;
+
+    const firstCard = cards[0];
+    firstCard.cardFace.visibility = false;
+    firstCard.cardFace.pickable = false;
+    firstCard.cardBack.visibility = false;
+
+    cardGroup.position.x = -42;
+    cardGroup.position.y = 0;
+    cardGroup.position.z = -15;
+
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
-    cardGame.cardGroup.position.x = -42;
-    cardGame.cardGroup.position.y = 0;
-    cardGame.cardGroup.position.z = -15;
 } );

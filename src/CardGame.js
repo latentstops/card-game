@@ -14,7 +14,9 @@ export class CardGame {
     }
 
     async load(){
+        this.engine.displayLoadingUI();
         await this.models.load();
+        this.engine.hideLoadingUI();
     }
 
     constructor(config) {
