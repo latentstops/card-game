@@ -146,6 +146,8 @@ export class CardGame {
 
     setupCamera() {
         this.setupArcRotateCamera();
+        this.activateCameraControls();
+        // this.deActivateCameraControls();
         // this.setupUniversalCamera();
     }
 
@@ -162,11 +164,9 @@ export class CardGame {
     }
 
     setupArcRotateCamera() {
-        const canvas = this.canvas;
         const scene = this.scene;
         scene.createDefaultCameraOrLight(true, true, true);
         const camera = scene.activeCamera;
-        camera.attachControl(canvas, true);
         camera.radius = 67;
         // camera.lowerRadiusLimit = 2;
         // camera.upperRadiusLimit = 10;
@@ -179,6 +179,17 @@ export class CardGame {
         camera.useAutoRotationBehavior = false;
 
         this.camera = camera;
+    }
+
+    activateCameraControls(){
+        const { camera, canvas } = this;
+
+        camera.attachControl(canvas, true);
+    }
+    deActivateCameraControls(){
+        const { camera, canvas } = this;
+
+        camera.detachControl(canvas);
     }
 
     setupScene() {

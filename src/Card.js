@@ -26,17 +26,7 @@ export class Card {
         this.setFaceTo( 'xA' );
         this.setBack();
         this.setupAnimations();
-        this.setupOnClickHandler();
-    }
-
-    setupOnClickHandler(){
-        const scene = this.scene;
-        scene.onPointerDown = (evt, pickResult) => {
-            if (pickResult.hit) {
-                this.playRotationIf(pickResult.pickedMesh);
-            }
-        };
-
+        // this.setupOnClickHandler();
     }
 
     playRotationIf( card = this.cardFace ){
