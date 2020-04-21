@@ -10,7 +10,7 @@ export class CardGame {
         this.beforeRender();
         this.render();
         this.applyMotionBlurEffect();
-        this.downDebugLayerIfExists();
+        // this.downDebugLayerIfExists();
     }
 
     async load(){
@@ -165,7 +165,7 @@ export class CardGame {
         scene.createDefaultCameraOrLight(true, true, true);
         const camera = scene.activeCamera;
         camera.attachControl(canvas, true);
-        camera.radius = 90;
+        camera.radius = 67;
         // camera.lowerRadiusLimit = 2;
         // camera.upperRadiusLimit = 10;
         camera.lowerRadiusLimit = 15;
