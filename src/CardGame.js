@@ -7,6 +7,7 @@ export class CardGame {
 
     async start(){
         await this.load();
+        this.beforeRender();
         this.render();
         this.applyMotionBlurEffect();
         this.downDebugLayerIfExists();
@@ -46,9 +47,17 @@ export class CardGame {
         });
     }
 
+    beforeRender(){
+        const scene = this.scene;
+        const camera = this.camera;
+        const defaultLight = scene.getLightByID("default light");
+        console.log(defaultLight);
+        scene.registerBeforeRender(function () {
+            defaultLight.position = camera.position;
+        });
+    }
 
     applyMotionBlurEffect(){
-        return;
         const scene = this.scene;
         const camera = this.camera;
         const motionblur = new BABYLON.MotionBlurPostProcess(
@@ -57,7 +66,7 @@ export class CardGame {
             1.0, // The required width/height ratio to downsize to before computing the render pass.
             camera // The camera to apply the render pass to.
         );
-        // motionblur.motionStrength = 2;
+        motionblur.motionStrength = 0.001;
         // motionblur.motionBlurSamples = 64;
         this.motionblur = motionblur;
     }
@@ -156,7 +165,7 @@ export class CardGame {
         scene.createDefaultCameraOrLight(true, true, true);
         const camera = scene.activeCamera;
         camera.attachControl(canvas, true);
-        camera.radius = 400;
+        camera.radius = 90;
         // camera.lowerRadiusLimit = 2;
         // camera.upperRadiusLimit = 10;
         camera.lowerRadiusLimit = 15;

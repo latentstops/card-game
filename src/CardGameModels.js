@@ -48,6 +48,7 @@ export class CardGameModels {
 
     async setupAsyncCardMesh(){
         this.cardMeshes = await this.loadCardMesh();
+        this.cardMeshes.forEach(m => m.visibility = false);
     }
 
     async loadCardMesh(path = this.paths.cardPathBabylon ){

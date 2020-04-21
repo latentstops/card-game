@@ -25,6 +25,94 @@ export class Card {
         this.setupPosition();
         this.setFaceTo( 'xA' );
         this.setBack();
+        this.setupAnimations();
+        this.setupOnClickHandler();
+    }
+
+    setupOnClickHandler(){
+        const scene = this.scene;
+        scene.onPointerDown = (evt, pickResult) => {
+            if (pickResult.hit) {
+                this.playRotationIf(pickResult.pickedMesh);
+            }
+        };
+
+    }
+
+    playRotationIf( card = this.cardFace ){
+        const toBack = this.animRotateToBack;
+        const toFront = this.animRotateToFront;
+        if(card.isRotated){
+            card.animations = [toFront];
+            card.isRotated = false;
+        } else {
+            card.animations = [toBack];
+            card.isRotated = true;
+        }
+
+        this.playAnimation( card );
+    }
+
+    playAnimation(card = this.cardFace){
+        const scene = this.scene;
+        scene.beginAnimation( card, 0, 10, true );
+    }
+
+    stopAnimation(card = this.cardFace){
+        const scene = this.scene;
+        scene.stopAnimation( card );
+    }
+
+    setupAnimations(){
+        this.rotationToBack();
+        this.rotationToFront();
+    }
+
+
+    rotationToFront() {
+        const cardRotateAnimation = new BABYLON.Animation(
+            "rotateToFront",
+            "rotation.z",
+            60,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        cardRotateAnimation.setKeys([
+            {
+                frame: 0,
+                value: 3 * Math.PI
+            },
+            {
+                frame: 10,
+                value: 0
+            }
+        ]);
+
+        this.animRotateToFront = cardRotateAnimation;
+    }
+
+    rotationToBack() {
+        const cardRotateAnimation = new BABYLON.Animation(
+            "rotateToBack",
+            "rotation.z",
+            60,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+        );
+
+        cardRotateAnimation.setKeys([
+            {
+                frame: 0,
+                value: 0
+            },
+            {
+                frame: 10,
+                value: 3 * Math.PI
+            }
+        ]);
+
+        this.animRotateToBack = cardRotateAnimation;
     }
 
     setBack() {
@@ -63,6 +151,11 @@ export class Card {
         const cardFaceMaterial = cardFace.material;
         const cardBackMaterial = cardBack.material;
 
+        cardFace.visibility = true;
+        cardBack.visibility = true;
+        cardFace.addChild( cardBack );
+        cardFace.isPickable = true;
+
         this.cardFace = cardFace;
         this.cardBack = cardBack;
         this.cardMeshes = cardMeshes;
@@ -79,7 +172,7 @@ export class Card {
     }
 
     set position( position ){
-        this.cardFace.position = this.cardBack.position = position;
+        this.cardFace.position = position;
     }
 
     get position(){

@@ -10,6 +10,8 @@ window.BABYLON = BABYLON;
 window.cardGame = new CardGame({canvas: 'canvas'});
 cardGame.start().then( () =>{
     const card = cardGame.models.card;
+    const cardGroup = new BABYLON.TransformNode();
+
     const cardNameMap = card.atlas.cardNameMap;
     const cards = [ card ];
 
@@ -23,6 +25,7 @@ cardGame.start().then( () =>{
             newCard.position.z = i * 10;
 
             cards.push( newCard );
+            newCard.cardFace.parent = cardGroup;
         }
     }
     // const cards = Array(52).fill().reduce( (acc, item, index) => {
@@ -37,6 +40,12 @@ cardGame.start().then( () =>{
     // }, [ card ] );
     cards.forEach( (card, index) => card.setFaceTo(cardNameMap[index].name)  );
     // cardNameMap.forEach( ({name}, index) => cards[index].setFaceTo(name)  );
-
+    cards[0].cardFace.visibility = false;
+    cards[0].cardBack.visibility = false;
+    cards[0].cardFace.pickable = false;
     cardGame.cards = cards;
+    cardGame.cardGroup = cardGroup;
+    cardGame.cardGroup.position.x = -42;
+    cardGame.cardGroup.position.y = 0;
+    cardGame.cardGroup.position.z = -15;
 } );
