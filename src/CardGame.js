@@ -1,34 +1,41 @@
 import {RobotController} from "./RobotController";
 import {Test} from "./Test";
 import {CardGameModels} from "./CardGameModels";
+import {Paths} from "./Paths";
 
 export class CardGame {
-    constructor(config) {
-        this.config = config;
-        this.init();
+
+    async start(){
+        await this.load();
+        this.render();
+        this.applyMotionBlurEffect();
+        this.downDebugLayerIfExists();
     }
 
-    construct() {
-        this.config = {};
+    async load(){
+        await this.models.load();
+    }
+
+    constructor(config) {
+        this.config = config;
         this.canvas = null;
         this.engine = null;
         this.scene = null;
         this.camera = null;
+
+        this.setup();
     }
 
-    init() {
-        this.initCanvas();
-        this.initEngine();
-        this.initScene();
-        this.initCamera();
-        // this.initRobot();
-        // this.initTest();
+    setup() {
+        this.setupCanvas();
+        this.setupEngine();
+        this.setupScene();
+        this.setupCamera();
+        // this.setupRobot();
+        // this.setupTest();
         this.connectHandlers();
-        // this.initHakagaz();
-        this.initGameModels();
-        this.render();
-        this.applyMotionBlurEffect();
-        // this.downDebugLayerIfExists();
+        // this.setupHakagaz();
+        this.setupGameModels();
     }
 
     render(){
@@ -41,6 +48,7 @@ export class CardGame {
 
 
     applyMotionBlurEffect(){
+        return;
         const scene = this.scene;
         const camera = this.camera;
         const motionblur = new BABYLON.MotionBlurPostProcess(
@@ -54,7 +62,8 @@ export class CardGame {
         this.motionblur = motionblur;
     }
 
-    initGameModels(){
+    setupGameModels(){
+        this.paths = new Paths();
         this.models = new CardGameModels(this);
     };
 
@@ -71,7 +80,7 @@ export class CardGame {
         });
     }
 
-    initHakagaz(){
+    setupHakagaz(){
         const scene = this.scene;
         // Load the model
         BABYLON.SceneLoader.Append("https://www.babylonjs.com/Assets/FlightHelmet/glTF/", "FlightHelmet_Materials.gltf", scene, function (meshes) {
@@ -116,20 +125,20 @@ export class CardGame {
 
     }
 
-    initTest(){
+    setupTest(){
         this.test = new Test(this);
     }
 
-    initRobot(){
+    setupRobot(){
         this.robotController = new RobotController(this);
     }
 
-    initCamera() {
-        this.initArcRotateCamera();
-        // this.initUniversalCamera();
+    setupCamera() {
+        this.setupArcRotateCamera();
+        // this.setupUniversalCamera();
     }
 
-    initUniversalCamera() {
+    setupUniversalCamera() {
         const canvas = this.canvas;
         const scene = this.scene;
         const camera = new BABYLON.FreeCamera('camera', new BABYLON.Vector3(0, 5, -10), scene);
@@ -141,7 +150,7 @@ export class CardGame {
         this.camera = camera;
     }
 
-    initArcRotateCamera() {
+    setupArcRotateCamera() {
         const canvas = this.canvas;
         const scene = this.scene;
         scene.createDefaultCameraOrLight(true, true, true);
@@ -161,21 +170,21 @@ export class CardGame {
         this.camera = camera;
     }
 
-    initScene() {
+    setupScene() {
         const engine = this.engine;
         const scene = new BABYLON.Scene(engine);
 
         this.scene = scene;
     }
 
-    initEngine() {
+    setupEngine() {
         const canvas = this.canvas;
         const engine = new BABYLON.Engine(canvas, true);
 
         this.engine = engine;
     }
 
-    initCanvas() {
+    setupCanvas() {
         const HTMLCanvasElement = window.HTMLCanvasElement;
         const config = this.config;
         const configCanvas = config.canvas;
