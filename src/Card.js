@@ -67,7 +67,6 @@ export class Card {
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
         );
-
         cardRotateAnimation.setKeys([
             {
                 frame: 0,

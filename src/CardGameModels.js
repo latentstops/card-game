@@ -23,9 +23,20 @@ export class CardGameModels {
         const scene = this.scene;
         let startingPoint = null;
         scene.onPointerObservable.add(({event, pickInfo, type}) => {
+            const rightClick = event.which === 3;
             switch (type) {
                 case BABYLON.PointerEventTypes.POINTERDOWN:
-                    if(pickInfo.hit && pickInfo.pickedMesh === this.ground) return;
+
+                    if( pickInfo.hit && pickInfo.pickedMesh === this.ground ) return;
+
+                    if (pickInfo.hit && rightClick) {
+                        this.card.playRotationIf(pickInfo.pickedMesh);
+                        setTimeout(() => {
+                            this.parent.deActivateCameraControls();
+                        }, 0);
+                        return;
+                    }
+
                     startingPoint = getGroundPosition();
 
                     if (startingPoint) {
@@ -39,10 +50,11 @@ export class CardGameModels {
                     }
                     break;
                 case BABYLON.PointerEventTypes.POINTERUP:
+                    setTimeout(() => {
+                        this.parent.activateCameraControls();
+                    }, 0);
                     if (startingPoint) {
-                        setTimeout(() => {
-                            this.parent.activateCameraControls();
-                        }, 0);
+
                         this.pickedMesh = null;
                         startingPoint = null;
                         return;
@@ -60,6 +72,10 @@ export class CardGameModels {
                         return;
                     }
 
+                    /**
+                     * The most interesting part
+                     * @type {Vector3}
+                     */
                     const diff = current.subtract(startingPoint);
                     this.pickedMesh.position.addInPlace(diff);
 
@@ -76,9 +92,8 @@ export class CardGameModels {
                     // console.log("POINTER TAP");
                     break;
                 case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
-                    if (pickInfo.hit) {
-                        this.card.playRotationIf(pickInfo.pickedMesh);
-                    }
+                    // console.log("POINTER DOUNBLE TAP");
+                    this.card.playRotationIf(pickInfo.pickedMesh);
                     break;
             }
         });

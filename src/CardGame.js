@@ -68,8 +68,8 @@ export class CardGame {
             1.0, // The required width/height ratio to downsize to before computing the render pass.
             camera // The camera to apply the render pass to.
         );
-        motionblur.motionStrength = 0.001;
-        // motionblur.motionBlurSamples = 64;
+        motionblur.motionStrength = 8;
+        motionblur.motionBlurSamples = 12;
         this.motionblur = motionblur;
     }
 

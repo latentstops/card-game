@@ -42,4 +42,21 @@ cardGame.start().then( () =>{
 
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
+
+    randomize();
 } );
+
+function randomize(){
+    const cards = cardGame.cards;
+    let timeoutId = null;
+
+    (function rnd(){
+        const index = Math.floor( Math.random() * cardGame.cards.length );
+        const card = cardGame.cards[index];
+        card.playRotationIf();
+
+        timeoutId = setTimeout(rnd, 1000);
+    })();
+
+    return () => clearTimeout( timeoutId );
+}
