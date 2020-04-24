@@ -52,7 +52,7 @@ cardGame.start().then( () =>{
     cardGame.cancelAnim = flipWave();
 } );
 
-function flipWave(interval = 100){
+function flipWave(interval = 80){
     const cardsMatrix = getCardsMatrix();
     const rowLength = cardsMatrix[0].length;
 
