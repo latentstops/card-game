@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "parcel --no-source-maps index.html"
+    "start": "parcel index.html"
   },
   "dependencies": {
     "@babel/runtime": "^7.9.2",

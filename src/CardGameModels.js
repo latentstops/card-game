@@ -1,115 +1,33 @@
-import {Card} from "./Card";
+import {joinWithSlash} from "./utils";
 
 export class CardGameModels {
-    constructor(game) {
-        this.parent = game;
-        this.paths = game.paths;
-        this.scene = game.scene;
-        this.camera = game.camera;
-        this.engine = game.engine;
+    constructor(root) {
+        this.parent = root;
+        this.paths = root.paths;
+        this.scene = root.scene;
+        this.camera = root.camera;
+        this.engine = root.engine;
 
         this.cardAtlas = null;
         this.cardMeshes = [];
     }
 
     async load(){
+        await this.setupAsyncObjects();
+
+        this.setupGround();
+        this.beautifyScene();
+        // this.setupPointerHandlers();
+    }
+
+    async setupAsyncObjects() {
         await this.setupAsyncCard();
-        await this.setupGround();
-        this.setupCard();
-        this.setupPointerHandlers();
+        await this.setupAsyncTable();
     }
 
-    setupPointerHandlers(){
-        const scene = this.scene;
-        let startingPoint = null;
-        scene.onPointerObservable.add(({event, pickInfo, type}) => {
-            const rightClick = event.which === 3;
-            switch (type) {
-                case BABYLON.PointerEventTypes.POINTERDOWN:
-
-                    if( pickInfo.hit && pickInfo.pickedMesh === this.ground ) return;
-
-                    if (pickInfo.hit && rightClick) {
-                        this.card.playRotationIf(pickInfo.pickedMesh);
-                        setTimeout(() => {
-                            this.parent.deActivateCameraControls();
-                        }, 0);
-                        return;
-                    }
-
-                    startingPoint = getGroundPosition();
-
-                    if (startingPoint) {
-                        setTimeout(() => {
-                            this.parent.deActivateCameraControls();
-                        }, 0);
-                    }
-                    if (pickInfo.hit && pickInfo.pickedMesh !== this.ground) {
-                        this.pickedMesh = pickInfo.pickedMesh;
-                        // this.parent.deActivateCameraControls();
-                    }
-                    break;
-                case BABYLON.PointerEventTypes.POINTERUP:
-                    setTimeout(() => {
-                        this.parent.activateCameraControls();
-                    }, 0);
-                    if (startingPoint) {
-
-                        this.pickedMesh = null;
-                        startingPoint = null;
-                        return;
-                    }
-
-                    break;
-                case BABYLON.PointerEventTypes.POINTERMOVE:
-                    if (!startingPoint) {
-                        return;
-                    }
-
-                    const current = getGroundPosition();
-
-                    if (!current) {
-                        return;
-                    }
-
-                    /**
-                     * The most interesting part
-                     * @type {Vector3}
-                     */
-                    const diff = current.subtract(startingPoint);
-                    this.pickedMesh.position.addInPlace(diff);
-
-                    startingPoint = current;
-
-                    break;
-                case BABYLON.PointerEventTypes.POINTERWHEEL:
-                    // console.log("POINTER WHEEL");
-                    break;
-                case BABYLON.PointerEventTypes.POINTERPICK:
-                    // console.log("POINTER PICK");
-                    break;
-                case BABYLON.PointerEventTypes.POINTERTAP:
-                    // console.log("POINTER TAP");
-                    break;
-                case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
-                    // console.log("POINTER DOUNBLE TAP");
-                    this.card.playRotationIf(pickInfo.pickedMesh);
-                    break;
-            }
-        });
-
-        const getGroundPosition = () => {
-            const pickinfo = scene.pick(scene.pointerX, scene.pointerY, mesh=>  mesh === this.ground );
-            if (pickinfo.hit) {
-                return pickinfo.pickedPoint;
-            }
-
-            return null;
-        }
-    }
-
-    setupCard(){
-        this.card = new Card(this);
+    beautifyScene() {
+        this.correctDefaultLight();
+        // this.connectTextures();
     }
 
     setupGround(){
@@ -119,16 +37,34 @@ export class CardGameModels {
         groundMaterial.specularColor = BABYLON.Color3.White();
         ground.material = groundMaterial;
         ground.material.alpha = 0;
-        ground.position.y = -1;
+        ground.position.y = 94;
 
 
         this.ground = ground;
     }
 
+    async setupAsyncTable() {
+        const scene = this.scene;
+        const tableMeshes = await this.loadAsyncMesh(this.paths.scenePathBabylon);
+        const tableDiffuseTexture = await this.loadTextureAsync(joinWithSlash(this.paths.table, 'blackjack_table_mat_baseColor.65452.jpg'));
+
+        const tableMesh = scene.getMeshByName('table');
+        const tableMaterial = scene.getMaterialByName('blackjack_table_mat');
+
+
+        const tableClothDiffuseTexture = await this.loadTextureAsync(this.paths.tableClothTexturePath);
+        const tableClothMaterial = scene.getMaterialByName('blackjack_cloth_mat');
+        tableClothMaterial.diffuseTexture = tableClothDiffuseTexture;
+
+        this.tableClothDiffuseTexture = tableClothDiffuseTexture;
+        this.tableClothMaterial = tableClothMaterial;
+        this.tableMeshes = tableMeshes;
+        this.tableMesh = tableMesh;
+    }
+
     async setupAsyncCard() {
-        await this.setupAsyncCardAtlas();
-        await this.setupAsyncCardMesh();
-        this.correctDefaultLight();
+        this.cardMeshes = await this.loadAsyncMesh(this.paths.cardBabylonPath);
+        this.cardAtlasTexture = await this.loadTextureAsync(this.paths.cardAtlasPath);
     }
 
     correctDefaultLight() {
@@ -136,41 +72,22 @@ export class CardGameModels {
         const defaultLight = scene.getLightByID("default light");
         defaultLight.direction.x = Math.PI / 2;
 
-        this.parent.defaultLight = defaultLight;
+        this.defaultLight = defaultLight;
     }
 
-    async setupAsyncCardAtlas(){
-        this.cardAtlas = await this.loadCardAtlas();
-    }
-
-    async loadCardAtlas( path = this.paths.cardPathAtlas){
-        const scene   = this.scene;
-        const texture = new BABYLON.Texture( path, scene );
-
-        return new Promise(res => texture.onLoadObservable.add( () => res(texture) ) );
-    }
-
-    async setupAsyncCardMesh(){
-        this.cardMeshes = await this.loadCardMesh();
-        this.cardMeshes.forEach(m => m.visibility = false);
-    }
-
-    async loadCardMesh(path = this.paths.cardPathBabylon ){
+    async loadTextureAsync( path ) {
         const scene = this.scene;
-        const cardPathBabylon = path;
+        const texture = new BABYLON.Texture(path, scene);
+
+        return new Promise(res => texture.onLoadObservable.add(() => res(texture)));
+    }
+
+    async loadAsyncMesh(path) {
+        const scene = this.scene;
 
         return new Promise(res =>
-            BABYLON.SceneLoader.ImportMesh('', '/', cardPathBabylon, scene, res)
+            BABYLON.SceneLoader.ImportMesh('', '/', path, scene, res)
         );
-    }
-
-    loadTable(){
-        const scene = this.scene;
-        const scenePathBabylon = this.paths.scenePathBabylon;
-        BABYLON.SceneLoader.ImportMesh('','/', scenePathBabylon, scene, (tableMeshes) => {
-            this.tableMeshes = tableMeshes;
-
-        });
     }
 
 }

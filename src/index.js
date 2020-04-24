@@ -1,7 +1,6 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/core/Debug/debugLayer";
 import '@babylonjs/loaders';
-import "@babylonjs/inspector";
 import 'pepjs';
 
 import { CardGame } from "./CardGame";
@@ -9,7 +8,8 @@ import { CardGame } from "./CardGame";
 window.BABYLON = BABYLON;
 window.cardGame = new CardGame({canvas: 'canvas'});
 cardGame.start().then( () =>{
-    const card = cardGame.models.card;
+    return;
+    const card = cardGame.card;
     const cardGroup = new BABYLON.TransformNode();
 
     const cardNameMap = card.atlas.cardNameMap;
@@ -29,7 +29,10 @@ cardGame.start().then( () =>{
         }
     }
 
-    cards.forEach( (card, index) => card.setFaceTo(cardNameMap[index].name)  );
+    cards.forEach( (card, index) => {
+        card.setFaceTo(cardNameMap[index].name);
+        card.flip();
+    }  );
 
     const firstCard = cards[0];
     firstCard.cardFace.visibility = false;
@@ -37,25 +40,43 @@ cardGame.start().then( () =>{
     firstCard.cardBack.visibility = false;
 
     cardGroup.position.x = -42;
-    cardGroup.position.y = 0;
+    cardGroup.position.y = 95;
     cardGroup.position.z = -15;
 
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
 
-    randomize();
+    flipRandomCards();
 } );
 
-function randomize(){
-    const cards = cardGame.cards;
+function flipRandomCards( interval ) {
+    let lastCard = null;
+
+    const flip = card => {
+        lastCard && lastCard.flip();
+        card.flip();
+        lastCard = card;
+    };
+
+    const cancel = getRandomElementWithInterval( cardGame.cards, flip, interval );
+
+    return cancel;
+}
+
+function getRandomElementWithInterval( items, callback, interval = 1000 ){
     let timeoutId = null;
 
     (function rnd(){
-        const index = Math.floor( Math.random() * cardGame.cards.length );
-        const card = cardGame.cards[index];
-        card.playRotationIf();
+        const getRandomNumber =  max => Math.floor( Math.random() * max );
+        const getRandomIndex = () => getRandomNumber( items.length );
 
-        timeoutId = setTimeout(rnd, 1000);
+        const index = getRandomIndex();
+
+        const item = items[index];
+
+        callback( item );
+
+        timeoutId = setTimeout( rnd, interval );
     })();
 
     return () => clearTimeout( timeoutId );

@@ -12,18 +12,17 @@ export class CardAtlas {
         return texture;
     }
 
-    constructor( parent ) {
-        this.parent = parent;
-        this.engine = parent.engine;
-        this.scene = parent.scene;
-        this.paths = parent.paths;
-        this.textureOrigin = parent.cardAtlas;
+    constructor( root ) {
+        this.root = root;
+        this.engine = root.engine;
+        this.scene = root.scene;
+        this.paths = root.paths;
+        this.textureOrigin = root.models.cardAtlasTexture;
 
         this.setup();
     }
 
     setup(){
-        this.setupTexture();
         this.setupUVOffsets();
         this.setupCardNameMap();
     }
@@ -99,10 +98,6 @@ export class CardAtlas {
         this.uOffset = uOffset;
     }
 
-    setupTexture(){
-        this.textureOrigin = this.parent.cardAtlas;
-    }
-
     setFaceByName( texture, name ){
         const map = this.findMapByName( name );
 
@@ -153,14 +148,14 @@ export class CardAtlas {
         let counter = 0;
         let animationFrameID = null;
 
-        const randomizer = new function Randomizer(parent) {
+        const randomizer = new function Randomizer(root) {
 
             this.randomize = () => {
 
                 let x = Math.floor(Math.random() * 11 );
                 let y = Math.floor(Math.random() * 4 );
 
-                parent.models.setFaceByXY( x, y );
+                root.models.setFaceByXY( x, y );
 
                 camera.alpha += counter > count / 2 ? alpha * 2 : alpha;
 
@@ -169,7 +164,7 @@ export class CardAtlas {
                     return cancelAnimationFrame( animationFrameID );
                 }
 
-                this.animationFrameID = requestAnimationFrame( () => this.randomize(parent) );
+                this.animationFrameID = requestAnimationFrame( () => this.randomize(root) );
             };
 
             this.stop = () => {

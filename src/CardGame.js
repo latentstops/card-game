@@ -1,7 +1,6 @@
-import {RobotController} from "./RobotController";
-import {Test} from "./Test";
 import {CardGameModels} from "./CardGameModels";
 import {Paths} from "./Paths";
+import {Card} from "./Card";
 
 export class CardGame {
 
@@ -9,8 +8,9 @@ export class CardGame {
         await this.load();
         this.beforeRender();
         this.render();
-        this.applyMotionBlurEffect();
-        // this.downDebugLayerIfExists();
+        // this.applyMotionBlurEffect();
+        this.downDebugLayerIfExists();
+        this.setupCard();
     }
 
     async load(){
@@ -34,10 +34,7 @@ export class CardGame {
         this.setupEngine();
         this.setupScene();
         this.setupCamera();
-        // this.setupRobot();
-        // this.setupTest();
         this.connectHandlers();
-        // this.setupHakagaz();
         this.setupGameModels();
     }
 
@@ -68,9 +65,13 @@ export class CardGame {
             1.0, // The required width/height ratio to downsize to before computing the render pass.
             camera // The camera to apply the render pass to.
         );
-        motionblur.motionStrength = 8;
-        motionblur.motionBlurSamples = 12;
+        motionblur.motionStrength = 10;
+        motionblur.motionBlurSamples = 32;
         this.motionblur = motionblur;
+    }
+
+    setupCard(){
+        this.card = new Card(this);
     }
 
     setupGameModels(){
@@ -86,62 +87,98 @@ export class CardGame {
     }
 
     connectHandlers(){
-        window.addEventListener('resize', () => {
-            this.engine.resize();
-        });
-    }
-
-    setupHakagaz(){
         const scene = this.scene;
-        // Load the model
-        BABYLON.SceneLoader.Append("https://www.babylonjs.com/Assets/FlightHelmet/glTF/", "FlightHelmet_Materials.gltf", scene, function (meshes) {
-            // Create a camera pointing at your model.
-            scene.createDefaultCameraOrLight(true, true, true);
-            scene.activeCamera.useAutoRotationBehavior = true;
-            scene.activeCamera.lowerRadiusLimit = 15;
-            scene.activeCamera.upperRadiusLimit = 180;
+        const engine = this.engine;
 
-            scene.activeCamera.alpha = 0.8;
+        window.addEventListener('resize', () => {
+            engine.resize();
+        });
 
-            scene.lights[0].dispose();
-            var light = new BABYLON.DirectionalLight("light1", new BABYLON.Vector3(-2, -6, -2), scene);
-            light.position = new BABYLON.Vector3(20, 60, 20);
-            light.shadowMinZ = 30;
-            light.shadowMaxZ = 180;
-            light.intensity = 5;
+        let startingPoint = null;
+        scene.onPointerObservable.add(({event, pickInfo, type}) => {
+            const rightClick = event.which === 3;
+            switch (type) {
+                case BABYLON.PointerEventTypes.POINTERDOWN:
 
-            var generator = new BABYLON.ShadowGenerator(512, light);
-            generator.useContactHardeningShadow = true;
-            generator.bias = 0.01;
-            generator.normalBias= 0.05;
-            generator.contactHardeningLightSizeUVRatio = 0.08;
+                    if( pickInfo.hit && pickInfo.pickedMesh === this.ground ) return;
 
-            for (var i = 0; i < scene.meshes.length; i++) {
-                generator.addShadowCaster(scene.meshes[i]);
-                scene.meshes[i].receiveShadows = true;
-                if (scene.meshes[i].material && scene.meshes[i].material.bumpTexture) {
-                    scene.meshes[i].material.bumpTexture.level = 2;
-                }
+                    if (pickInfo.hit && rightClick) {
+                        this.card.flip(pickInfo.pickedMesh);
+                        setTimeout(() => {
+                            this.deActivateCameraControls();
+                        }, 0);
+                        return;
+                    }
+
+                    startingPoint = getGroundPosition();
+
+                    if (startingPoint) {
+                        setTimeout(() => {
+                            this.deActivateCameraControls();
+                        }, 0);
+                    }
+                    if (pickInfo.hit && pickInfo.pickedMesh !== this.ground) {
+                        this.pickedMesh = pickInfo.pickedMesh;
+                        // this.parent.deActivateCameraControls();
+                    }
+                    break;
+                case BABYLON.PointerEventTypes.POINTERUP:
+                    setTimeout(() => {
+                        this.activateCameraControls();
+                    }, 0);
+                    if (startingPoint) {
+
+                        this.pickedMesh = null;
+                        startingPoint = null;
+                        return;
+                    }
+
+                    break;
+                case BABYLON.PointerEventTypes.POINTERMOVE:
+                    if (!startingPoint) {
+                        return;
+                    }
+
+                    const current = getGroundPosition();
+
+                    if (!current) {
+                        return;
+                    }
+
+                    /**
+                     * The most interesting part
+                     * @type {Vector3}
+                     */
+                    const diff = current.subtract(startingPoint);
+                    this.pickedMesh.position.addInPlace(diff);
+
+                    startingPoint = current;
+
+                    break;
+                case BABYLON.PointerEventTypes.POINTERWHEEL:
+                    // console.log("POINTER WHEEL");
+                    break;
+                case BABYLON.PointerEventTypes.POINTERPICK:
+                    // console.log("POINTER PICK");
+                    break;
+                case BABYLON.PointerEventTypes.POINTERTAP:
+                    // console.log("POINTER TAP");
+                    break;
+                case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
+                    // console.log("POINTER DOUNBLE TAP");
+                    this.card.flip(pickInfo.pickedMesh);
+                    break;
+            }
+        });
+
+        const getGroundPosition = () => {
+            const pickinfo = scene.pick(scene.pointerX, scene.pointerY, mesh=>  mesh === this.ground );
+            if (pickinfo.hit) {
+                return pickinfo.pickedPoint;
             }
 
-            var helper = scene.createDefaultEnvironment({
-                skyboxSize: 1500,
-                groundShadowLevel: 0.5,
-            });
-
-            helper.setMainColor(BABYLON.Color3.Gray());
-
-            scene.environmentTexture.lodGenerationScale = 0.6;
-        });
-
-    }
-
-    setupTest(){
-        this.test = new Test(this);
-    }
-
-    setupRobot(){
-        this.robotController = new RobotController(this);
+            return null;
+        }
     }
 
     setupCamera() {
@@ -167,11 +204,11 @@ export class CardGame {
         const scene = this.scene;
         scene.createDefaultCameraOrLight(true, true, true);
         const camera = scene.activeCamera;
-        camera.radius = 67;
+        camera.radius = 300;
         // camera.lowerRadiusLimit = 2;
         // camera.upperRadiusLimit = 10;
         camera.lowerRadiusLimit = 15;
-        camera.upperRadiusLimit = 500;
+        camera.upperRadiusLimit = 250;
         camera.wheelDeltaPercentage = 0.01;
         camera.autoRotation = false;
         camera.beta = Math.PI / 4;

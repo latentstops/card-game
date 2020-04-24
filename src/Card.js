@@ -3,18 +3,18 @@ import {CardAtlas} from "./CardAtlas";
 export class Card {
 
     clone(){
-        const card = new Card(this.parent);
+        const card = new Card(this.root);
 
         card.position.x += this.position.x + 7;
 
         return card;
     }
 
-    constructor(parent) {
-        this.parent = parent;
-        this.scene = parent.scene;
-        this.camera = parent.camera;
-        this.paths = parent.paths;
+    constructor(root) {
+        this.root = root;
+        this.scene = root.scene;
+        this.camera = root.camera;
+        this.paths = root.paths;
         this.setup();
     }
 
@@ -23,24 +23,26 @@ export class Card {
         this.setupMaterialOrigin();
         this.setupMeshes();
         this.setupPosition();
-        this.setFaceTo( 'xA' );
+        this.setFaceTo( 'qk' );
         this.setBack();
         this.setupAnimations();
-        // this.setupOnClickHandler();
     }
 
-    playRotationIf( card = this.cardFace ){
+    flip( card = this.cardFace ){
+        this.setCardAnimations( card );
+        this.playAnimation( card );
+        this.flipCardIsRotatedFlag( card ) ;
+    }
+
+    flipCardIsRotatedFlag( card = this.cardFace ) {
+        card.isRotated = !card.isRotated;
+    }
+
+    setCardAnimations( card = this.cardFace ) {
         const toBack = this.animRotateToBack;
         const toFront = this.animRotateToFront;
-        if(card.isRotated){
-            card.animations = [toFront];
-            card.isRotated = false;
-        } else {
-            card.animations = [toBack];
-            card.isRotated = true;
-        }
 
-        this.playAnimation( card );
+        card.animations = card.isRotated ? [toFront] : [toBack];
     }
 
     playAnimation(card = this.cardFace){
@@ -62,7 +64,7 @@ export class Card {
     rotationToFront() {
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToFront",
-            "rotation.z",
+            "rotation.x",
             60,
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
@@ -84,7 +86,7 @@ export class Card {
     rotationToBack() {
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToBack",
-            "rotation.z",
+            "rotation.x",
             60,
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
@@ -134,7 +136,7 @@ export class Card {
     }
 
     setupMeshes(){
-        const cardMeshes = this.parent.cardMeshes;
+        const cardMeshes = this.root.models.cardMeshes;
         const cardFace = cardMeshes[0].clone();
         const cardBack = cardMeshes[1].clone();
         const cardFaceMaterial = cardFace.material;
@@ -153,7 +155,7 @@ export class Card {
     }
 
     setupCardAtlas(){
-        this.atlas = new CardAtlas(this.parent);
+        this.atlas = new CardAtlas(this.root);
     }
 
     get material() {
