@@ -64,7 +64,7 @@ export class Card {
     rotationToFront() {
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToFront",
-            "rotation.x",
+            "rotation.z",
             60,
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
@@ -86,7 +86,7 @@ export class Card {
     rotationToBack() {
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToBack",
-            "rotation.x",
+            "rotation.z",
             60,
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT

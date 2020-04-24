@@ -50,7 +50,6 @@ export class CardGame {
         const scene = this.scene;
         const camera = this.camera;
         const defaultLight = scene.getLightByID("default light");
-        console.log(defaultLight);
         scene.registerBeforeRender(function () {
             defaultLight.position = camera.position;
         });
@@ -65,8 +64,8 @@ export class CardGame {
             1.0, // The required width/height ratio to downsize to before computing the render pass.
             camera // The camera to apply the render pass to.
         );
-        motionblur.motionStrength = 10;
-        motionblur.motionBlurSamples = 32;
+        motionblur.motionStrength = 8;
+        motionblur.motionBlurSamples = 12;
         this.motionblur = motionblur;
     }
 
@@ -100,7 +99,7 @@ export class CardGame {
             switch (type) {
                 case BABYLON.PointerEventTypes.POINTERDOWN:
 
-                    if( pickInfo.hit && pickInfo.pickedMesh === this.ground ) return;
+                    if( pickInfo.hit && pickInfo.pickedMesh === this.models.ground ) return;
 
                     if (pickInfo.hit && rightClick) {
                         this.card.flip(pickInfo.pickedMesh);
@@ -117,7 +116,7 @@ export class CardGame {
                             this.deActivateCameraControls();
                         }, 0);
                     }
-                    if (pickInfo.hit && pickInfo.pickedMesh !== this.ground) {
+                    if (pickInfo.hit && pickInfo.pickedMesh !== this.models.ground) {
                         this.pickedMesh = pickInfo.pickedMesh;
                         // this.parent.deActivateCameraControls();
                     }
@@ -172,7 +171,7 @@ export class CardGame {
         });
 
         const getGroundPosition = () => {
-            const pickinfo = scene.pick(scene.pointerX, scene.pointerY, mesh=>  mesh === this.ground );
+            const pickinfo = scene.pick(scene.pointerX, scene.pointerY, mesh=>  mesh === this.models.ground );
             if (pickinfo.hit) {
                 return pickinfo.pickedPoint;
             }
@@ -213,6 +212,7 @@ export class CardGame {
         camera.autoRotation = false;
         camera.beta = Math.PI / 4;
         camera.alpha = -Math.PI / 2;
+        camera.minZ = 1;
         camera.useAutoRotationBehavior = false;
 
         this.camera = camera;

@@ -17,7 +17,6 @@ export class CardGameModels {
 
         this.setupGround();
         this.beautifyScene();
-        // this.setupPointerHandlers();
     }
 
     async setupAsyncObjects() {
@@ -37,7 +36,7 @@ export class CardGameModels {
         groundMaterial.specularColor = BABYLON.Color3.White();
         ground.material = groundMaterial;
         ground.material.alpha = 0;
-        ground.position.y = 94;
+        ground.position.y = -0.15;
 
 
         this.ground = ground;

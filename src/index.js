@@ -8,7 +8,7 @@ import { CardGame } from "./CardGame";
 window.BABYLON = BABYLON;
 window.cardGame = new CardGame({canvas: 'canvas'});
 cardGame.start().then( () =>{
-    return;
+    // return;
     const card = cardGame.card;
     const cardGroup = new BABYLON.TransformNode();
 
@@ -34,20 +34,67 @@ cardGame.start().then( () =>{
         card.flip();
     }  );
 
+    cardGame.models.ground.parent = cardGroup;
+
     const firstCard = cards[0];
     firstCard.cardFace.visibility = false;
     firstCard.cardFace.pickable = false;
     firstCard.cardBack.visibility = false;
 
     cardGroup.position.x = -42;
-    cardGroup.position.y = 95;
+    cardGroup.position.y = 93.33;
     cardGroup.position.z = -15;
 
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
 
-    flipRandomCards();
+    // cardGame.cancelAnim = flipRandomCards();
+    cardGame.cancelAnim = flipWave();
 } );
+
+function flipWave(interval = 100){
+    const cardsMatrix = getCardsMatrix();
+    const rowLength = cardsMatrix[0].length;
+
+    const colLength = cardsMatrix.length;
+
+    let start = 0;
+    let timeoutId = null;
+
+    wave();
+
+    return () => clearTimeout( timeoutId );
+
+    function wave(){
+        const cards = getCardsColumn( start );
+
+        cards.forEach( card => card.flip() );
+
+        start++;
+
+        if( start === rowLength ) start = 0;
+
+        timeoutId = setTimeout( wave, interval );
+    }
+
+    function getCardsColumn( col ){
+        return Array( colLength ).fill().map( (num,row) => cardsMatrix[row][col] );
+    }
+
+    function getCardsMatrix(){
+        const cards = cardGame.cards;
+        const cardsClone = Array.apply(null,cards);
+        const cardsMatrix = [];
+
+        cardsClone.shift();
+
+        while( cardsClone.length ){
+            const cards13 = cardsClone.splice( 0, 13 );
+            cardsMatrix.push( cards13 );
+        }
+        return cardsMatrix;
+    }
+}
 
 function flipRandomCards( interval ) {
     let lastCard = null;
