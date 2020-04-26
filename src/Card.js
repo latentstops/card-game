@@ -1,16 +1,16 @@
-import {CardAtlas} from "./CardAtlas";
+import { CardAtlas } from "./CardAtlas";
 
 export class Card {
 
     clone(){
-        const card = new Card(this.root);
+        const card = new Card( this.root );
 
         card.position.x += this.position.x + 7;
 
         return card;
     }
 
-    constructor(root) {
+    constructor( root ){
         this.root = root;
         this.scene = root.scene;
         this.camera = root.camera;
@@ -31,26 +31,26 @@ export class Card {
     flip( card = this.cardFace ){
         this.setCardAnimations( card );
         this.playAnimation( card );
-        this.flipCardIsRotatedFlag( card ) ;
+        this.flipCardIsRotatedFlag( card );
     }
 
-    flipCardIsRotatedFlag( card = this.cardFace ) {
+    flipCardIsRotatedFlag( card = this.cardFace ){
         card.isRotated = !card.isRotated;
     }
 
-    setCardAnimations( card = this.cardFace ) {
+    setCardAnimations( card = this.cardFace ){
         const toBack = this.animRotateToBack;
         const toFront = this.animRotateToFront;
 
-        card.animations = card.isRotated ? [toFront] : [toBack];
+        card.animations = card.isRotated ? [ toFront ] : [ toBack ];
     }
 
-    playAnimation(card = this.cardFace){
+    playAnimation( card = this.cardFace ){
         const scene = this.scene;
         scene.beginAnimation( card, 0, 10, true );
     }
 
-    stopAnimation(card = this.cardFace){
+    stopAnimation( card = this.cardFace ){
         const scene = this.scene;
         scene.stopAnimation( card );
     }
@@ -61,7 +61,7 @@ export class Card {
     }
 
 
-    rotationToFront() {
+    rotationToFront(){
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToFront",
             "rotation.z",
@@ -69,7 +69,7 @@ export class Card {
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
         );
-        cardRotateAnimation.setKeys([
+        cardRotateAnimation.setKeys( [
             {
                 frame: 0,
                 value: 3 * Math.PI
@@ -78,12 +78,12 @@ export class Card {
                 frame: 10,
                 value: 0
             }
-        ]);
+        ] );
 
         this.animRotateToFront = cardRotateAnimation;
     }
 
-    rotationToBack() {
+    rotationToBack(){
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToBack",
             "rotation.z",
@@ -92,7 +92,7 @@ export class Card {
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
         );
 
-        cardRotateAnimation.setKeys([
+        cardRotateAnimation.setKeys( [
             {
                 frame: 0,
                 value: 0
@@ -101,14 +101,14 @@ export class Card {
                 frame: 10,
                 value: 3 * Math.PI
             }
-        ]);
+        ] );
 
         this.animRotateToBack = cardRotateAnimation;
     }
 
-    setBack() {
+    setBack(){
         const material = this.material;
-        const backSideTexture = this.atlas.getTextureByCardName('backside');
+        const backSideTexture = this.atlas.getTextureByCardName( 'backside' );
 
         material.diffuseTexture = backSideTexture;
 
@@ -132,13 +132,13 @@ export class Card {
 
     setupMaterialOrigin(){
         const scene = this.scene;
-        this.materialOrigin = new BABYLON.StandardMaterial("cardMaterial", scene);
+        this.materialOrigin = new BABYLON.StandardMaterial( "cardMaterial", scene );
     }
 
     setupMeshes(){
         const cardMeshes = this.root.models.cardMeshes;
-        const cardFace = cardMeshes[0].clone();
-        const cardBack = cardMeshes[1].clone();
+        const cardFace = cardMeshes[ 0 ].clone();
+        const cardBack = cardMeshes[ 1 ].clone();
         const cardFaceMaterial = cardFace.material;
         const cardBackMaterial = cardBack.material;
 
@@ -155,11 +155,11 @@ export class Card {
     }
 
     setupCardAtlas(){
-        this.atlas = new CardAtlas(this.root);
+        this.atlas = new CardAtlas( this.root );
     }
 
-    get material() {
-        return this.materialOrigin.clone('mat_clone');
+    get material(){
+        return this.materialOrigin.clone( 'mat_clone' );
     }
 
     set position( position ){

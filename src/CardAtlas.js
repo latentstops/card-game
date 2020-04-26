@@ -1,18 +1,18 @@
 export class CardAtlas {
 
     getBackSide(){
-        return this.getTextureByCardName('backside');
+        return this.getTextureByCardName( 'backside' );
     }
 
     getTextureByCardName( name ){
         const texture = this.texture;
 
-        this.setFaceByName(texture, name);
+        this.setFaceByName( texture, name );
 
         return texture;
     }
 
-    constructor( root ) {
+    constructor( root ){
         this.root = root;
         this.engine = root.engine;
         this.scene = root.scene;
@@ -32,29 +32,29 @@ export class CardAtlas {
 
         let f = 0;
 
-        for( let y = 0; y <= 4; y++ ){
+        for ( let y = 0; y <= 4; y++ ) {
 
-            for( let x = 0; x <= 10; x++ ) {
+            for ( let x = 0; x <= 10; x++ ) {
 
-                if( f < 13 ){
+                if ( f < 13 ) {
 
-                    map.push( { name: getName(`x`, f + 1), args: [ x, y ] } );
+                    map.push( { name: getName( `x`, f + 1 ), args: [ x, y ] } );
 
-                } else if( f === 13 ){
+                } else if ( f === 13 ) {
 
                     map.push( { name: `backSide`, args: [ x, y ] } );
 
-                } else if( f > 13 && f <= 13 + 13 ){
+                } else if ( f > 13 && f <= 13 + 13 ) {
 
-                    map.push( { name: getName(`q`, f - 13), args: [ x, y ] } );
+                    map.push( { name: getName( `q`, f - 13 ), args: [ x, y ] } );
 
-                } else if( f > 26 && f <= 26 + 13 ){
+                } else if ( f > 26 && f <= 26 + 13 ) {
 
-                    map.push( { name: getName(`s`, f - 26), args: [ x, y ] } );
+                    map.push( { name: getName( `s`, f - 26 ), args: [ x, y ] } );
 
-                } else if( f > 39 && f <= 39 + 13 ){
+                } else if ( f > 39 && f <= 39 + 13 ) {
 
-                    map.push( { name: getName(`g`, f - 39), args: [ x, y ] } );
+                    map.push( { name: getName( `g`, f - 39 ), args: [ x, y ] } );
 
                 }
 
@@ -64,7 +64,7 @@ export class CardAtlas {
 
         }
 
-        function getName(prefix, num){
+        function getName( prefix, num ){
             const real = num + 1;
             const numMap = {
                 11: 'A',
@@ -72,11 +72,11 @@ export class CardAtlas {
                 13: 'K',
                 14: 'Q',
             };
-            return [prefix, numMap[real] || real].join('');
+            return [ prefix, numMap[ real ] || real ].join( '' );
         }
 
-        const [backSide] = map.splice(13, 1);
-        map.push(backSide);
+        const [ backSide ] = map.splice( 13, 1 );
+        map.push( backSide );
 
         this.cardNameMap = map;
     }
@@ -106,7 +106,7 @@ export class CardAtlas {
         this.setFaceByXY( x, y, texture );
     }
 
-    findMapByName( name ) {
+    findMapByName( name ){
         const fromNameMap = this.cardNameMap;
 
         const mapWithSameName = map => map.name.toLowerCase() === name.toLowerCase();
@@ -120,12 +120,14 @@ export class CardAtlas {
         const experimentalNumber = 6;
         const correctedY = experimentalNumber - y;
 
-        this.setFrameToCardFaceSide( texture, x, correctedY);
+        this.setFrameToCardFaceSide( texture, x, correctedY );
     }
 
     setFrameToCardFaceSide( texture, x, y ){
 
-        if( !texture ) { return console.warn("No Texture"); }
+        if ( !texture ) {
+            return console.warn( "No Texture" );
+        }
 
         const uOffset = this.uOffset;
         const vOffset = this.vOffset;
@@ -137,34 +139,34 @@ export class CardAtlas {
     }
 
     get texture(){
-        const texture = this.textureOrigin;
+        const texture = this.textureOrigin || new BABYLON.Texture();
         return texture.clone();
     }
 
-    random(count = 100, interval = 50){
+    random( count = 100, interval = 50 ){
         const camera = this.camera;
         const alpha = 0.55;
 
         let counter = 0;
         let animationFrameID = null;
 
-        const randomizer = new function Randomizer(root) {
+        const randomizer = new function Randomizer( root ){
 
             this.randomize = () => {
 
-                let x = Math.floor(Math.random() * 11 );
-                let y = Math.floor(Math.random() * 4 );
+                let x = Math.floor( Math.random() * 11 );
+                let y = Math.floor( Math.random() * 4 );
 
                 root.models.setFaceByXY( x, y );
 
                 camera.alpha += counter > count / 2 ? alpha * 2 : alpha;
 
-                if (counter === count) {
+                if ( counter === count ) {
                     camera.alpha = Math.PI / 2;
                     return cancelAnimationFrame( animationFrameID );
                 }
 
-                this.animationFrameID = requestAnimationFrame( () => this.randomize(root) );
+                this.animationFrameID = requestAnimationFrame( () => this.randomize( root ) );
             };
 
             this.stop = () => {
@@ -175,7 +177,7 @@ export class CardAtlas {
 
         randomizer.randomize();
 
-        setTimeout(() => randomizer.stop(), 2000);
+        setTimeout( () => randomizer.stop(), 2000 );
     }
 
 }

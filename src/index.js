@@ -3,11 +3,15 @@ import "@babylonjs/core/Debug/debugLayer";
 import '@babylonjs/loaders';
 import 'pepjs';
 
+import * as utils from './utils';
 import { CardGame } from "./CardGame";
 
+Object.assign( window, utils );
+
 window.BABYLON = BABYLON;
-window.cardGame = new CardGame({canvas: 'canvas'});
-cardGame.start().then( () =>{
+window.cardGame = new CardGame( { canvas: 'canvas' } );
+
+cardGame.start().then( () => {
     // return;
     const card = cardGame.card;
     const cardGroup = new BABYLON.TransformNode();
@@ -15,9 +19,9 @@ cardGame.start().then( () =>{
     const cardNameMap = card.atlas.cardNameMap;
     const cards = [ card ];
 
-    for (let i = 0; i < 4; i ++ ){
+    for ( let i = 0; i < 4; i++ ) {
 
-        for (let j = 0 ; j < 13; j ++ ){
+        for ( let j = 0; j < 13; j++ ) {
 
             const newCard = card.clone();
 
@@ -29,14 +33,14 @@ cardGame.start().then( () =>{
         }
     }
 
-    cards.forEach( (card, index) => {
-        card.setFaceTo(cardNameMap[index].name);
+    cards.forEach( ( card, index ) => {
+        card.setFaceTo( cardNameMap[ index ].name );
         card.flip();
-    }  );
+    } );
 
     cardGame.models.ground.parent = cardGroup;
 
-    const firstCard = cards[0];
+    const firstCard = cards[ 0 ];
     firstCard.cardFace.visibility = false;
     firstCard.cardFace.pickable = false;
     firstCard.cardBack.visibility = false;
@@ -48,13 +52,13 @@ cardGame.start().then( () =>{
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
 
-    // cardGame.cancelAnim = flipRandomCards();
+    // cardGame.cancelAnim = flipRandom();
     cardGame.cancelAnim = flipWave();
 } );
 
-function flipWave(interval = 80){
+function flipWave( interval = 80 ){
     const cardsMatrix = getCardsMatrix();
-    const rowLength = cardsMatrix[0].length;
+    const rowLength = cardsMatrix[ 0 ].length;
 
     const colLength = cardsMatrix.length;
 
@@ -72,23 +76,23 @@ function flipWave(interval = 80){
 
         start++;
 
-        if( start === rowLength ) start = 0;
+        if ( start === rowLength ) start = 0;
 
         timeoutId = setTimeout( wave, interval );
     }
 
     function getCardsColumn( col ){
-        return Array( colLength ).fill().map( (num,row) => cardsMatrix[row][col] );
+        return Array( colLength ).fill().map( ( num, row ) => cardsMatrix[ row ][ col ] );
     }
 
     function getCardsMatrix(){
         const cards = cardGame.cards;
-        const cardsClone = Array.apply(null,cards);
+        const cardsClone = Array.apply( null, cards );
         const cardsMatrix = [];
 
         cardsClone.shift();
 
-        while( cardsClone.length ){
+        while ( cardsClone.length ) {
             const cards13 = cardsClone.splice( 0, 13 );
             cardsMatrix.push( cards13 );
         }
@@ -96,7 +100,7 @@ function flipWave(interval = 80){
     }
 }
 
-function flipRandomCards( interval ) {
+function flipRandom( interval ){
     let lastCard = null;
 
     const flip = card => {
@@ -113,18 +117,18 @@ function flipRandomCards( interval ) {
 function getRandomElementWithInterval( items, callback, interval = 1000 ){
     let timeoutId = null;
 
-    (function rnd(){
-        const getRandomNumber =  max => Math.floor( Math.random() * max );
+    ( function rnd(){
+        const getRandomNumber = max => Math.floor( Math.random() * max );
         const getRandomIndex = () => getRandomNumber( items.length );
 
         const index = getRandomIndex();
 
-        const item = items[index];
+        const item = items[ index ];
 
         callback( item );
 
         timeoutId = setTimeout( rnd, interval );
-    })();
+    } )();
 
     return () => clearTimeout( timeoutId );
 }

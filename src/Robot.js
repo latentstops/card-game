@@ -1,5 +1,5 @@
 export class Robot {
-    constructor(game) {
+    constructor( game ){
         this.parent = game;
         this.scene = game.scene;
         this.engine = game.engine;
@@ -12,29 +12,33 @@ export class Robot {
     }
 
     idle(){
-        this.playAnimation('idle');
-    }
-    walk(){
-        this.playAnimation('walk');
-    }
-    run(){
-        this.playAnimation('run');
-    }
-    left(){
-        this.playAnimation('left');
-    }
-    right(){
-        this.playAnimation('right');
+        this.playAnimation( 'idle' );
     }
 
-    playAnimation(type){
+    walk(){
+        this.playAnimation( 'walk' );
+    }
+
+    run(){
+        this.playAnimation( 'run' );
+    }
+
+    left(){
+        this.playAnimation( 'left' );
+    }
+
+    right(){
+        this.playAnimation( 'right' );
+    }
+
+    playAnimation( type ){
         const scene = this.scene;
         const skeleton = this.skeleton;
         const animations = this.animations;
-        const animationType = `${type}Range`;
-        const animation = animations[animationType];
+        const animationType = `${ type }Range`;
+        const animation = animations[ animationType ];
 
-        scene.beginAnimation(skeleton, animation.from, animation.to, true);
+        scene.beginAnimation( skeleton, animation.from, animation.to, true );
     }
 
     load(){
@@ -47,16 +51,15 @@ export class Robot {
         BABYLON.Animation.AllowMatricesInterpolation = true;
 
 
-
-        var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+        var light = new BABYLON.HemisphericLight( "light1", new BABYLON.Vector3( 0, 1, 0 ), scene );
         light.intensity = 0.6;
         light.specular = BABYLON.Color3.Black();
 
-        var light2 = new BABYLON.DirectionalLight("dir01", new BABYLON.Vector3(0, -0.5, -1.0), scene);
-        light2.position = new BABYLON.Vector3(0, 5, 5);
+        var light2 = new BABYLON.DirectionalLight( "dir01", new BABYLON.Vector3( 0, -0.5, -1.0 ), scene );
+        light2.position = new BABYLON.Vector3( 0, 5, 5 );
 
         // Shadows
-        var shadowGenerator = new BABYLON.ShadowGenerator(1024, light2);
+        var shadowGenerator = new BABYLON.ShadowGenerator( 1024, light2 );
         shadowGenerator.useBlurExponentialShadowMap = true;
         shadowGenerator.blurKernel = 1024;
 
@@ -67,20 +70,20 @@ export class Robot {
             "",
             "dummy3.babylon",
             scene,
-            (newMeshes, particleSystems, skeletons) => {
-                var skeleton = skeletons[0];
+            ( newMeshes, particleSystems, skeletons ) => {
+                var skeleton = skeletons[ 0 ];
                 this.skeleton = skeleton;
                 this.meshes = newMeshes;
 
-                shadowGenerator.addShadowCaster(scene.meshes[0], true);
-                for (var index = 0; index < newMeshes.length; index++) {
-                    newMeshes[index].receiveShadows = false;
+                shadowGenerator.addShadowCaster( scene.meshes[ 0 ], true );
+                for ( var index = 0; index < newMeshes.length; index++ ) {
+                    newMeshes[ index ].receiveShadows = false;
                 }
 
-                var helper = scene.createDefaultEnvironment({
+                var helper = scene.createDefaultEnvironment( {
                     enableGroundShadow: true
-                });
-                helper.setMainColor(BABYLON.Color3.Gray());
+                } );
+                helper.setMainColor( BABYLON.Color3.Gray() );
                 helper.ground.position.y += 0.01;
 
                 // ROBOT
@@ -89,11 +92,11 @@ export class Robot {
                 skeleton.animationPropertiesOverride.blendingSpeed = 0.05;
                 skeleton.animationPropertiesOverride.loopMode = 1;
 
-                var idleRange = skeleton.getAnimationRange("YBot_Idle");
-                var walkRange = skeleton.getAnimationRange("YBot_Walk");
-                var runRange = skeleton.getAnimationRange("YBot_Run");
-                var leftRange = skeleton.getAnimationRange("YBot_LeftStrafeWalk");
-                var rightRange = skeleton.getAnimationRange("YBot_RightStrafeWalk");
+                var idleRange = skeleton.getAnimationRange( "YBot_Idle" );
+                var walkRange = skeleton.getAnimationRange( "YBot_Walk" );
+                var runRange = skeleton.getAnimationRange( "YBot_Run" );
+                var leftRange = skeleton.getAnimationRange( "YBot_LeftStrafeWalk" );
+                var rightRange = skeleton.getAnimationRange( "YBot_RightStrafeWalk" );
 
                 this.animations = {
                     idleRange,
@@ -104,7 +107,7 @@ export class Robot {
                 };
 
                 // IDLE
-                if (idleRange) scene.beginAnimation(skeleton, idleRange.from, idleRange.to, true);
+                if ( idleRange ) scene.beginAnimation( skeleton, idleRange.from, idleRange.to, true );
 
                 /* // UI
                  var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
@@ -190,9 +193,8 @@ export class Robot {
                  UiPanel.addControl(button1);*/
 
                 engine.hideLoadingUI();
-            });
+            } );
     }
-
 
 
 }

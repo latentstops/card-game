@@ -1,7 +1,9 @@
-import {joinWithSlash} from "./utils";
+import { Vector3 } from "@babylonjs/core";
+import { joinWithSlash, deepAssign } from "./utils";
+
 
 export class CardGameModels {
-    constructor(root) {
+    constructor( root ){
         this.parent = root;
         this.paths = root.paths;
         this.scene = root.scene;
@@ -19,73 +21,108 @@ export class CardGameModels {
         this.beautifyScene();
     }
 
-    async setupAsyncObjects() {
+    async setupAsyncObjects(){
         await this.setupAsyncCard();
         await this.setupAsyncTable();
+        await this.setupAsyncPufik();
     }
 
-    beautifyScene() {
+    async setupAsyncPufik(){
+        const pufikMeshes = await this.loadAsyncMesh( `models/standard/pufik/pufik.glb` );
+
+        const pufikMesh = pufikMeshes[ 1 ];
+        const pufikMaterial = pufikMesh.material;
+
+        deepAssign( pufikMesh, {
+            scaling: new Vector3( 50, 50, 50 ),
+            position: new Vector3( 0, 95, 0 ),
+            // rotation: new Vector3( 0, -Math.PI, 0 )
+        } );
+
+        deepAssign( pufikMaterial, {
+            useAlphaFromAlbedoTexture: false
+        } );
+
+        this.pufikMesh = pufikMesh;
+        this.pufikMeshes = pufikMeshes;
+    }
+
+    beautifyScene(){
         this.correctDefaultLight();
         // this.connectTextures();
     }
 
     setupGround(){
         const scene = this.scene;
-        const ground = BABYLON.Mesh.CreateGround("ground", 1000, 1000, 1, scene, false);
-        const groundMaterial = new BABYLON.StandardMaterial("ground", scene);
-        groundMaterial.specularColor = BABYLON.Color3.White();
+        const ground = BABYLON.Mesh.CreateGround( "ground", 1000, 1000, 1, scene, false );
+        const groundMaterial = new BABYLON.StandardMaterial( "ground", scene );
+
+        deepAssign( groundMaterial, {
+            specularColor: BABYLON.Color3.White(),
+            alpha: 0,
+        } );
+
+        deepAssign( groundMaterial, {
+            position: { y: -0.15 }
+        } );
+
         ground.material = groundMaterial;
-        ground.material.alpha = 0;
-        ground.position.y = -0.15;
 
 
         this.ground = ground;
     }
 
-    async setupAsyncTable() {
+    async setupAsyncTable(){
         const scene = this.scene;
-        const tableMeshes = await this.loadAsyncMesh(this.paths.scenePathBabylon);
-        const tableDiffuseTexture = await this.loadTextureAsync(joinWithSlash(this.paths.table, 'blackjack_table_mat_baseColor.65452.jpg'));
+        const tablePath = this.paths.table;
 
-        const tableMesh = scene.getMeshByName('table');
-        const tableMaterial = scene.getMaterialByName('blackjack_table_mat');
+        const tableMeshes = await this.loadAsyncMesh( this.paths.scenePathBabylon );
+        const tableDiffuseTexture = await this.loadAsyncTexture( joinWithSlash( tablePath, 'blackjack_table_mat_baseColor.65452.jpg' ) );
+        const tableMaterial = scene.getMaterialByName( 'blackjack_table_mat' );
 
+        const tableClothDiffuseTexture = await this.loadAsyncTexture( this.paths.tableClothTexturePath );
+        const tableClothMaterial = scene.getMaterialByName( 'blackjack_cloth_mat' );
 
-        const tableClothDiffuseTexture = await this.loadTextureAsync(this.paths.tableClothTexturePath);
-        const tableClothMaterial = scene.getMaterialByName('blackjack_cloth_mat');
         tableClothMaterial.diffuseTexture = tableClothDiffuseTexture;
 
-        this.tableClothDiffuseTexture = tableClothDiffuseTexture;
-        this.tableClothMaterial = tableClothMaterial;
-        this.tableMeshes = tableMeshes;
+        const tableMesh = scene.getMeshByName( 'table' );
+
         this.tableMesh = tableMesh;
+        this.tableMeshes = tableMeshes;
+        this.tableClothMaterial = tableClothMaterial;
+        this.tableClothDiffuseTexture = tableClothDiffuseTexture;
     }
 
-    async setupAsyncCard() {
-        this.cardMeshes = await this.loadAsyncMesh(this.paths.cardBabylonPath);
-        this.cardAtlasTexture = await this.loadTextureAsync(this.paths.cardAtlasPath);
+    async setupAsyncCard(){
+        this.cardMeshes = await this.loadAsyncMesh( this.paths.cardBabylonPath );
+        this.cardAtlasTexture = await this.loadAsyncTexture( this.paths.cardAtlasPath );
     }
 
-    correctDefaultLight() {
+    correctDefaultLight(){
         const scene = this.scene;
-        const defaultLight = scene.getLightByID("default light");
-        defaultLight.direction.x = Math.PI / 2;
+        const defaultLight = scene.getLightByID( "default light" );
+
+        deepAssign( defaultLight, {
+            direction: { x: Math.PI / 2 }
+        } );
 
         this.defaultLight = defaultLight;
     }
 
-    async loadTextureAsync( path ) {
+    async loadAsyncTexture( path ){
         const scene = this.scene;
-        const texture = new BABYLON.Texture(path, scene);
+        const texture = new BABYLON.Texture( path, scene );
 
-        return new Promise(res => texture.onLoadObservable.add(() => res(texture)));
+        return new Promise( res =>
+            texture.onLoadObservable.add( () => res( texture ) )
+        );
     }
 
-    async loadAsyncMesh(path) {
+    async loadAsyncMesh( path ){
         const scene = this.scene;
 
-        return new Promise(res =>
-            BABYLON.SceneLoader.ImportMesh('', '/', path, scene, res)
+        return new Promise( res =>
+            BABYLON.SceneLoader.ImportMesh( '', '/', path, scene, res )
         );
     }
 

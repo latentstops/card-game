@@ -1,7 +1,7 @@
-import {joinWithSlash} from "./utils";
+import { joinWithSlash } from "./utils";
 
 export class Paths {
-    constructor(base = 'models/standard') {
+    constructor( base = 'models/standard' ){
         this.models = base;
         this.setup();
     }
@@ -18,57 +18,57 @@ export class Paths {
         const modelsPath = this.models;
         const tablePath = joinWithSlash( modelsPath, `table` );
 
-        this.assignModelPathToThis(tablePath, {
+        this.assignModelPathToThis( tablePath, {
             tableClothTexturePath: tableClothTextureName,
             tableCardHolderDiffuseTexturePath: tableCardHolderDiffuseTextureName
-        });
+        } );
 
-     this.assignToThis({
-         tableClothTextureName,
-         tableCardHolderDiffuseTextureName
-     })
+        this.assignToThis( {
+            tableClothTextureName,
+            tableCardHolderDiffuseTextureName
+        } )
     }
 
-    setupCardPaths() {
+    setupCardPaths(){
         const cardBabylonName = 'card.88687.babylon';
-        const cardTextureName   = 'cards.dd11b.jpg';
-        const modelsPath      = this.models;
-        const cardPath        = joinWithSlash( modelsPath, `card` );
+        const cardTextureName = 'cards.dd11b.jpg';
+        const modelsPath = this.models;
+        const cardPath = joinWithSlash( modelsPath, `card` );
 
-        this.assignModelPathToThis(cardPath, {
+        this.assignModelPathToThis( cardPath, {
             cardBabylonPath: cardBabylonName,
             cardAtlasPath: cardTextureName
-        });
+        } );
 
-        this.assignToThis({
+        this.assignToThis( {
             cardPath,
             cardBabylonName,
             cardTextureName
-        });
+        } );
     }
 
     setupScenePaths(){
         const sceneNameBabylon = 'blackjack_table.incremental.449b4.babylon';
-        const modelsPath       = this.models;
-        const scenePath        = joinWithSlash( modelsPath, `table` );
+        const modelsPath = this.models;
+        const scenePath = joinWithSlash( modelsPath, `table` );
 
-        this.assignModelPathToThis(scenePath, {
+        this.assignModelPathToThis( scenePath, {
             scenePathBabylon: sceneNameBabylon
-        });
+        } );
 
-        this.assignToThis({
+        this.assignToThis( {
             table: scenePath
-        })
+        } )
     }
 
     assignModelPathToThis( path, obj = {} ){
-        Object.entries(obj).forEach(([key, val]) => {
-            const newPath = joinWithSlash(path, val);
-            this[key] = newPath;
-        });
+        Object.entries( obj ).forEach( ( [ key, val ] ) => {
+            const newPath = joinWithSlash( path, val );
+            this[ key ] = newPath;
+        } );
     }
 
-    assignToThis( obj = {}){
-        Object.assign(this, obj);
+    assignToThis( obj = {} ){
+        Object.assign( this, obj );
     }
 }
