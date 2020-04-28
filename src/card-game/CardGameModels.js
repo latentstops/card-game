@@ -1,9 +1,11 @@
 import { Vector3 } from "@babylonjs/core";
-import { joinWithSlash, deepAssign } from "../utils";
+import { utils, AsyncLoader } from "./deps";
 
+const { deepAssign, joinWithSlash } = utils;
 
-export class CardGameModels {
+export class CardGameModels extends AsyncLoader {
     constructor( root ){
+        super( root.scene );
         this.parent = root;
         this.paths = root.paths;
         this.scene = root.scene;
@@ -28,7 +30,7 @@ export class CardGameModels {
     }
 
     async setupAsyncPufik(){
-        const pufikMeshes = await this.loadAsyncMesh( `models/standard/pufik/pufik.glb` );
+        const [ pufikMeshes ] = await this.importMeshAsync( `models/standard/pufik/pufik.glb` );
 
         const pufikMesh = pufikMeshes[ 1 ];
         const pufikMaterial = pufikMesh.material;
@@ -76,11 +78,11 @@ export class CardGameModels {
         const scene = this.scene;
         const tablePath = this.paths.table;
 
-        const tableMeshes = await this.loadAsyncMesh( this.paths.scenePathBabylon );
-        const tableDiffuseTexture = await this.loadAsyncTexture( joinWithSlash( tablePath, 'blackjack_table_mat_baseColor.65452.jpg' ) );
+        const [ tableMeshes ] = await this.importMeshAsync( this.paths.scenePathBabylon );
+        const tableDiffuseTexture = await this.loadTextureAsync( joinWithSlash( tablePath, 'blackjack_table_mat_baseColor.65452.jpg' ) );
         const tableMaterial = scene.getMaterialByName( 'blackjack_table_mat' );
 
-        const tableClothDiffuseTexture = await this.loadAsyncTexture( this.paths.tableClothTexturePath );
+        const tableClothDiffuseTexture = await this.loadTextureAsync( this.paths.tableClothTexturePath );
         const tableClothMaterial = scene.getMaterialByName( 'blackjack_cloth_mat' );
 
         tableClothMaterial.diffuseTexture = tableClothDiffuseTexture;
@@ -94,8 +96,9 @@ export class CardGameModels {
     }
 
     async setupAsyncCard(){
-        this.cardMeshes = await this.loadAsyncMesh( this.paths.cardBabylonPath );
-        this.cardAtlasTexture = await this.loadAsyncTexture( this.paths.cardAtlasPath );
+        const [ cardMeshes ] = await this.importMeshAsync( this.paths.cardBabylonPath );
+        this.cardMeshes = cardMeshes;
+        this.cardAtlasTexture = await this.loadTextureAsync( this.paths.cardAtlasPath );
     }
 
     correctDefaultLight(){
@@ -107,23 +110,6 @@ export class CardGameModels {
         } );
 
         this.defaultLight = defaultLight;
-    }
-
-    async loadAsyncTexture( path ){
-        const scene = this.scene;
-        const texture = new BABYLON.Texture( path, scene );
-
-        return new Promise( res =>
-            texture.onLoadObservable.add( () => res( texture ) )
-        );
-    }
-
-    async loadAsyncMesh( path ){
-        const scene = this.scene;
-
-        return new Promise( res =>
-            BABYLON.SceneLoader.ImportMesh( '', '/', path, scene, res )
-        );
     }
 
 }

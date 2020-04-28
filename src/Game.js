@@ -1,4 +1,4 @@
-import { deepAssign } from "./utils";
+import { deepAssign } from "./utils/utils";
 
 export class Game {
 
@@ -16,10 +16,6 @@ export class Game {
         // this.showDebugLayerIfExists();
     }
 
-    /**
-     * TODO improve abstract methods call
-     * @returns {Promise<void>}
-     */
     async callChildLoadMethod(){
         const engine = this.engine;
 
@@ -57,6 +53,7 @@ export class Game {
         const scene = this.scene;
         const camera = this.camera;
         const defaultLight = scene.getLightByID( "default light" );
+        if(!defaultLight) return;
         scene.registerBeforeRender( function(){
             defaultLight.position = camera.position;
         } );
@@ -99,16 +96,16 @@ export class Game {
     }
 
     setupCamera(){
-        this.setupArcRotateCamera();
+        // this.setupArcRotateCamera();
+        this.setupUniversalCamera();
         this.activateCameraControls();
         // this.deActivateCameraControls();
-        // this.setupUniversalCamera();
     }
 
     setupUniversalCamera(){
         const canvas = this.canvas;
         const scene = this.scene;
-        const camera = new BABYLON.FreeCamera( 'camera', new BABYLON.Vector3( 0, 5, -10 ), scene );
+        const camera = new BABYLON.FreeCamera( 'camera', new BABYLON.Vector3( 0, 5, -5 ), scene );
 
         camera.setTarget( BABYLON.Vector3.Zero() );
 
@@ -119,8 +116,6 @@ export class Game {
 
     setupArcRotateCamera(){
         const scene = this.scene;
-
-        scene.createDefaultCameraOrLight( true, true, true );
 
         const camera = scene.activeCamera;
 
@@ -154,6 +149,8 @@ export class Game {
     setupScene(){
         const engine = this.engine;
         const scene = new BABYLON.Scene( engine );
+
+        scene.createDefaultCameraOrLight( true, true, true );
 
         this.scene = scene;
     }

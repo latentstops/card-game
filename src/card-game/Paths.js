@@ -1,4 +1,4 @@
-import { joinWithSlash } from "../utils";
+import { joinWithSlash } from "../utils/utils";
 
 export class Paths {
     constructor( base = 'models/standard' ){

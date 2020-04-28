@@ -1,5 +1,5 @@
-import { Test } from "./Test";
-import { RobotController } from "./RobotController";
+import { Test } from "./test/Test";
+import { RobotController } from "./robot/RobotController";
 
 export class DevCodes {
     constructor( game ){

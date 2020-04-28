@@ -1,4 +1,6 @@
 import * as utils from '../utils';
 
-export * from '../Game';
 export { utils };
+export * from '../utils';
+export * from '../Game';
+export * from '../AsyncLoader';
