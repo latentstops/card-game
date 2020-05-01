@@ -7,6 +7,9 @@ export { deepAssign }
 export { deepDiff }
 export { deepCopy }
 
+export function getProp(obj,prop){
+    return prop.split('.').reduce( (acc, prop) => acc[prop], obj );
+}
 export function getJSONDiff( obj ){
     const compare = getDiffSelfBabylon( obj );
     return () => {

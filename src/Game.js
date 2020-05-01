@@ -96,8 +96,15 @@ export class Game {
     }
 
     setupCamera(){
-        // this.setupArcRotateCamera();
-        this.setupUniversalCamera();
+        const cameraType = this.config.cameraType || 'arc';
+        const cameraMap = {
+            arc: () => this.setupArcRotateCamera(),
+            uni: () => this.setupUniversalCamera()
+        };
+
+        const setupCameraMethod = cameraMap[ cameraType ];
+        setupCameraMethod();
+
         this.activateCameraControls();
         // this.deActivateCameraControls();
     }

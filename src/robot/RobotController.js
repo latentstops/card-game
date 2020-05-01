@@ -32,15 +32,12 @@ export class RobotController {
             switch ( button ) {
                 case 12:
                     robot.walk();
-                    robot.meshes[ 0 ].position.z += 0.01;
                     break;
                 case 15:
                     robot.right();
-                    robot.meshes[ 0 ].position.x += 0.01;
                     break;
                 case 14:
                     robot.left();
-                    robot.meshes[ 0 ].position.x -= 0.01;
                     break;
                 case 0:
                     robot.run();
@@ -59,24 +56,19 @@ export class RobotController {
         let timeoutId = null;
 
         window.addEventListener( 'keydown', e => {
-            console.log( e );
             const button = e.which;
             switch ( button ) {
                 case 83:
                     robot.walk();
-                    robot.meshes[ 0 ].position.z -= 0.01;
                     break;
                 case 87:
                     robot.walk();
-                    robot.meshes[ 0 ].position.z += 0.01;
                     break;
                 case 68:
                     robot.right();
-                    robot.meshes[ 0 ].position.x += 0.01;
                     break;
                 case 65:
                     robot.left();
-                    robot.meshes[ 0 ].position.x -= 0.01;
                     break;
                 case 0:
                     robot.run();

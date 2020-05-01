@@ -10,8 +10,8 @@ window.CANNON = CANNON;
 
 import { HouseGame } from "./HouseGame";
 
-const houseGame = new HouseGame({ canvas: 'canvas' });
+const houseGame = new HouseGame({ canvas: 'canvas', cameraType: 'uni' });
 
-houseGame.start();
+houseGame.start().then( console.log );
 
 window.game = houseGame;

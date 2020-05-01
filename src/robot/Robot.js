@@ -1,4 +1,5 @@
 import { AsyncLoader } from "./depth";
+import { getProp } from "../utils";
 
 export class Robot extends AsyncLoader {
     constructor( root ){
@@ -13,11 +14,11 @@ export class Robot extends AsyncLoader {
     }
 
     walk(){
+        this.playRunForwardAnimation();
         this.playAnimation( 'walk' );
     }
 
     run(){
-        this.positionAnimation();
         this.playAnimation( 'run' );
     }
 
@@ -29,28 +30,38 @@ export class Robot extends AsyncLoader {
         this.playAnimation( 'right' );
     }
 
-    positionAnimation(){
+    playRunForwardAnimation(){
+        const scene = this.scene;
         const mesh = this.mesh;
-        const posZ = mesh.position.z;
-        const cardRotateAnimation = new BABYLON.Animation(
-            "forward",
-            "position.z",
-            60,
-            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
-            BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
-        );
-        cardRotateAnimation.setKeys( [
+        const targetProperty = 'position.z';
+        const posZ = getProp( mesh, targetProperty );
+        const runForwardAnimation = this.createPositionAnimation( 'run', targetProperty, [
             {
                 frame: 0,
                 value: posZ
             },
             {
                 frame: 100,
-                value: posZ + 10
+                value: posZ + 0.05
             }
         ] );
 
-        this.animRotateToFront = cardRotateAnimation;
+        scene.beginAnimation( mesh );
+        mesh.animations = [ animation ];
+
+        this.runAnimation = runForwardAnimation;
+    }
+
+    createPositionAnimation(animationName, targetProperty, keys){
+        const animation = new BABYLON.Animation(
+            animationName,
+            targetProperty,
+            60,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE
+        );
+        animation.setKeys( keys );
+        return animation;
     }
 
     playAnimation( type ){
@@ -87,7 +98,7 @@ export class Robot extends AsyncLoader {
 
         engine.displayLoadingUI();
 
-        const [meshes, particleSystems, skeletons] = await this.importMeshAsync( 'dummy3.babylon' );
+        const [ meshes, particleSystems, skeletons ] = await this.importMeshAsync( 'dummy3.babylon' );
 
         const mesh = meshes[ 0 ];
         const skeleton = skeletons[ 0 ];
