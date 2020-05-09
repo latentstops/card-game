@@ -108,16 +108,22 @@ export class Card {
 
     setBack(){
         const material = this.material;
+        const cardBack = this.cardBack;
+
+        if(!cardBack) return;
+    
         const backSideTexture = this.atlas.getTextureByCardName( 'backside' );
 
         material.diffuseTexture = backSideTexture;
 
-        this.cardBack.material = material;
+        cardBack.material = material;
     }
 
     setFaceTo( name ){
         const material = this.material;
         const mesh = this.cardFace;
+
+        if(!mesh) return;
 
         const texture = this.atlas.getTextureByCardName( name );
 
@@ -127,7 +133,9 @@ export class Card {
     }
 
     setupPosition(){
-        this.position = this.cardFace.position;
+        const cardFace = this.cardFace;
+        if(!cardFace) return;
+        this.position = cardFace.position;
     }
 
     setupMaterialOrigin(){
@@ -137,8 +145,17 @@ export class Card {
 
     setupMeshes(){
         const cardMeshes = this.root.models.cardMeshes;
-        const cardFace = cardMeshes[ 0 ].clone();
-        const cardBack = cardMeshes[ 1 ].clone();
+
+        if(!cardMeshes) return;
+
+        const cardFaceOrigin = cardMeshes[ 0 ];
+        const cardBackOrigin = cardMeshes[ 1 ];
+
+        if(!cardFaceOrigin || !cardBackOrigin) return;
+
+        const cardFace = cardFaceOrigin.clone();
+        const cardBack = cardBackOrigin.clone();
+
         const cardFaceMaterial = cardFace.material;
         const cardBackMaterial = cardBack.material;
 

@@ -24,9 +24,12 @@ export class CardGameModels extends AsyncLoader {
     }
 
     async setupAsyncObjects(){
+        // await this.setupAsyncCardEvolution();
         await this.setupAsyncCard();
         await this.setupAsyncTable();
-        await this.setupAsyncPufik();
+        await this.setupAsyncChair();
+        await this.setupAsyncChip();
+        // await this.setupAsyncPufik();
     }
 
     async setupAsyncPufik(){
@@ -74,7 +77,44 @@ export class CardGameModels extends AsyncLoader {
         this.ground = ground;
     }
 
+    async setupAsyncChip(){
+        const scene = this.scene;
+        const chip = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chip.glb', scene );
+        const chipMeshes = chip.meshes;
+
+        // const scale = 1;
+        //
+        // chipMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
+
+        this.chipMeshes = chipMeshes;
+    }
+
+    async setupAsyncChair(){
+        const scene = this.scene;
+        const chair = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chair.glb', scene );
+        const chairMeshes = chair.meshes;
+
+        // const scale = 1;
+        //
+        // chairMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
+
+        this.chairMeshes = chairMeshes;
+    }
+
     async setupAsyncTable(){
+        const scene = this.scene;
+
+        const table = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'table.glb', scene );
+        const tableMeshes = table.meshes;
+
+        // const scale = 1;
+        //
+        // tableMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
+
+        this.tableMeshes = tableMeshes;
+    }
+
+    async setupAsyncTableEvolution(){
         const scene = this.scene;
         const tablePath = this.paths.table;
 
@@ -96,6 +136,21 @@ export class CardGameModels extends AsyncLoader {
     }
 
     async setupAsyncCard(){
+
+        const scene = this.scene;
+
+        const card = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'card.glb', scene );
+        const cardMeshes = card.meshes;
+
+        const scale = 1;
+
+        cardMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
+
+        this.cardMeshes = cardMeshes;
+
+    }
+
+    async setupAsyncCardEvolution(){
         const [ cardMeshes ] = await this.importMeshAsync( this.paths.cardBabylonPath );
         this.cardMeshes = cardMeshes;
         this.cardAtlasTexture = await this.loadTextureAsync( this.paths.cardAtlasPath );

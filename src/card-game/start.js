@@ -12,7 +12,7 @@ window.BABYLON = BABYLON;
 window.cardGame = new CardGame( { canvas: 'canvas' } );
 
 cardGame.start().then( () => {
-    // return;
+    return;
     const card = cardGame.card;
     if(!card) return;
 
@@ -55,7 +55,7 @@ cardGame.start().then( () => {
     cardGame.cardGroup = cardGroup;
 
     // cardGame.cancelAnim = flipRandom();
-    cardGame.cancelAnim = flipWave();
+    // cardGame.cancelAnim = flipWave();
 } );
 
 function flipWave( interval = 80 ){

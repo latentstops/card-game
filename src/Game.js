@@ -13,7 +13,7 @@ export class Game {
         this.beforeRender();
         this.render();
         // this.applyMotionBlurEffect();
-        // this.showDebugLayerIfExists();
+        this.showDebugLayerIfExists();
     }
 
     async callChildLoadMethod(){

@@ -1,2 +1,2 @@
-// import './card-game/start';
-import './house-game/start';
+import './card-game/start';
+// import './house-game/start';
