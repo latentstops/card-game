@@ -24,8 +24,9 @@ export class CardGameModels extends AsyncLoader {
     }
 
     async setupAsyncObjects(){
+        // await this.setupAsyncScene();
         // await this.setupAsyncCardEvolution();
-        await this.setupAsyncCard();
+        // await this.setupAsyncCard();
         await this.setupAsyncTable();
         await this.setupAsyncChair();
         await this.setupAsyncChip();
@@ -82,21 +83,39 @@ export class CardGameModels extends AsyncLoader {
         const chip = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chip.glb', scene );
         const chipMeshes = chip.meshes;
 
-        // const scale = 1;
-        //
-        // chipMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
-
         this.chipMeshes = chipMeshes;
     }
 
     async setupAsyncChair(){
         const scene = this.scene;
-        const chair = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chair.glb', scene );
-        const chairMeshes = chair.meshes;
+        const chairImported = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chair.glb', scene );
+        const chairMeshes = chairImported.meshes;
 
-        // const scale = 1;
-        //
-        // chairMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
+        const chair1 = getMeshByName( "chair_01" );
+        chair1.position.set(128,0,82);
+        chair1.rotationQuaternion = null;
+        chair1.rotation.z = 0;
+        chair1.rotation.y = -Math.PI * 0.67;
+        chair1.rotation.x = -Math.PI/2;
+
+        const chair2 = chair1.clone();
+        chair2.position.set(0,0,137);
+        chair2.rotationQuaternion = null;
+        chair2.rotation.z = 0;
+        chair2.rotation.y = -Math.PI;
+        chair2.rotation.x = -Math.PI / 2;
+
+        const chair3 = chair1.clone();
+        chair3.position.set(-128,0,82);
+        chair3.rotationQuaternion = null;
+        chair3.rotation.z = 0;
+        chair3.rotation.y = Math.PI * 0.67;
+        chair3.rotation.x = -Math.PI / 2;
+
+
+        function getMeshByName( name ){
+            return scene.meshes.find( m => m.name === name );
+        }
 
         this.chairMeshes = chairMeshes;
     }
@@ -106,10 +125,6 @@ export class CardGameModels extends AsyncLoader {
 
         const table = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'table.glb', scene );
         const tableMeshes = table.meshes;
-
-        // const scale = 1;
-        //
-        // tableMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
 
         this.tableMeshes = tableMeshes;
     }
@@ -135,14 +150,23 @@ export class CardGameModels extends AsyncLoader {
         this.tableClothDiffuseTexture = tableClothDiffuseTexture;
     }
 
+    async setupAsyncScene(){
+        const scene = this.scene;
+
+        const sceneTemplate = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'scene.glb', scene );
+        const sceneTemplateMeshes = sceneTemplate.meshes;
+
+        this.sceneTemplateMeshes = sceneTemplateMeshes;
+    }
+
     async setupAsyncCard(){
 
         const scene = this.scene;
 
-        const card = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'card.glb', scene );
+        const card = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'card.2mesh.glb', scene );
         const cardMeshes = card.meshes;
 
-        const scale = 1;
+        const scale = 10;
 
         cardMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
 

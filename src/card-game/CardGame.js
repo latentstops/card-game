@@ -46,6 +46,7 @@ export class CardGame extends Game {
     }
 
     pickCardOnPointerEvents(){
+        return;
         const scene = this.scene;
 
         let startingPoint = null;

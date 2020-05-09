@@ -148,13 +148,13 @@ export class Card {
 
         if(!cardMeshes) return;
 
-        const cardFaceOrigin = cardMeshes[ 0 ];
-        const cardBackOrigin = cardMeshes[ 1 ];
+        const cardFaceOrigin = cardMeshes[ 1 ];
+        const cardBackOrigin = cardMeshes[ 2 ];
 
         if(!cardFaceOrigin || !cardBackOrigin) return;
 
-        const cardFace = cardFaceOrigin.clone();
-        const cardBack = cardBackOrigin.clone();
+        const cardFace = cardFaceOrigin;//.clone();
+        const cardBack = cardBackOrigin;//.clone();
 
         const cardFaceMaterial = cardFace.material;
         const cardBackMaterial = cardBack.material;
