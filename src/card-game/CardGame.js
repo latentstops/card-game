@@ -2,17 +2,30 @@ import { Game } from "./deps";
 import { CardGameModels } from "./CardGameModels";
 import { Paths } from "./Paths";
 import { Card } from "./Card";
+import { Chip } from "./Chip";
+import { ChipGroup } from "./ChipGroup";
+import { ChipGroupsController } from "./ChipGroupsController";
 
 export class CardGame extends Game {
 
     constructor( config ){
         super(config);
+        this.chipGroups = [];
     }
 
     setup(){
         super.setup();
         this.setupGameModels();
         this.connectHandlers();
+    }
+
+    setupChipGroup(){
+        this.chipGroup = new ChipGroup( this );
+    }
+
+    setupChip(){
+        const chipMesh = this.models.chipMeshes[ 1 ];
+        this.chip = new Chip( chipMesh );
     }
 
     setupCard(){
@@ -23,6 +36,15 @@ export class CardGame extends Game {
         this.paths = new Paths();
         this.models = new CardGameModels( this );
     };
+
+    setupChipController(){
+        this.chipGroupsController = new ChipGroupsController( this );
+    }
+
+    setChipsInGroup( count, type, pointNum ){
+        const chipGroupsController = this.chipGroupsController;
+        chipGroupsController.setChipsInGroup.apply( chipGroupsController, arguments );
+    }
 
     /**
      * Abstract Method
@@ -38,6 +60,9 @@ export class CardGame extends Game {
      */
     afterLoad(){
         this.setupCard();
+        this.setupChip();
+        this.setupChipGroup();
+        this.setupChipController();
     }
 
     connectHandlers(){

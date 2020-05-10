@@ -7,6 +7,13 @@ export { deepAssign }
 export { deepDiff }
 export { deepCopy }
 
+export function diff2(){
+    var origin = cardGame.chip.mesh;
+    var clone = origin.clone();
+    var originEntries = Object.entries(origin);
+    var diff = originEntries.filter( ([key,val]) => clone[key] !== val ).map( ([key,val]) => ({ key, origin: origin[key], clone: clone[key] }) );
+}
+
 export function getProp(obj,prop){
     return prop.split('.').reduce( (acc, prop) => acc[prop], obj );
 }

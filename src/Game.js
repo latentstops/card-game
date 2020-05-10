@@ -12,8 +12,8 @@ export class Game {
         await this.callChildLoadMethod();
         this.beforeRender();
         this.render();
-        // this.applyMotionBlurEffect();
-        this.showDebugLayerIfExists();
+        this.applyMotionBlurEffect();
+        // this.showDebugLayerIfExists();
     }
 
     async callChildLoadMethod(){
@@ -133,7 +133,7 @@ export class Game {
             wheelDeltaPercentage: 0.01,
             autoRotation: false,
             beta: Math.PI / 4,
-            alpha: -Math.PI / 2,
+            alpha: Math.PI / 2,
             minZ: 1,
             useAutoRotationBehavior: false
         } );

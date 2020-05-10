@@ -12,6 +12,22 @@ window.BABYLON = BABYLON;
 window.cardGame = new CardGame( { canvas: 'canvas' } );
 
 cardGame.start().then( () => {
+    var chipTypes = [ 1,5,25,100,500 ];
+
+    Array(8).fill().map( (_, index) => {
+        const count = Math.round( Math.random() * 50 );
+        const type = chipTypes[ Math.round( Math.random() * chipTypes.length - 1) ];
+        const pointNum = index + 1;
+
+        console.log( count, type, pointNum );
+
+        cardGame.chipGroupsController.setChipsInGroup(
+            count,
+            type,
+            pointNum
+        )
+    });
+
     return;
     const card = cardGame.card;
     if(!card) return;

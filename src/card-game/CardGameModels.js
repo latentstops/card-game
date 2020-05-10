@@ -80,9 +80,19 @@ export class CardGameModels extends AsyncLoader {
 
     async setupAsyncChip(){
         const scene = this.scene;
-        const chip = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chip.glb', scene );
+        const chip = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'chip/chip.glb', scene );
         const chipMeshes = chip.meshes;
+        const textureNames = [
+            "Chips_W1_BaseColor.jpg",
+            "Chips_R5_BaseColor.jpg",
+            "Chips_G25_BaseColor.jpg",
+            "Chips_B100_BaseColor.jpg",
+            "Chips_V500_BaseColor.jpg"
+        ];
+        const texturesAsync = textureNames.map( name => this.loadTextureAsync(`chip/${name}`) );
+        const textures = await Promise.all( texturesAsync );
 
+        this.chipTextures = textures;
         this.chipMeshes = chipMeshes;
     }
 
