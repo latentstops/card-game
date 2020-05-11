@@ -28,7 +28,16 @@ cardGame.start().then( () => {
         )
     });
 
-    return;
+    var chipGroups = cardGame.chipGroupsController.groups;
+
+    chipGroups.forEach( group => {
+        group.chips.forEach( chip => {
+            chip.mesh.rotationQuaternion = null;
+            chip.mesh.rotation.x = -3 * Math.PI / 4;
+        } );
+    } );
+
+    // return;
     const card = cardGame.card;
     if(!card) return;
 
@@ -43,8 +52,8 @@ cardGame.start().then( () => {
 
             const newCard = card.clone();
 
-            newCard.position.x = j * 7;
-            newCard.position.z = i * 10;
+            newCard.position.x = j * 15;
+            newCard.position.z = i * 18;
 
             cards.push( newCard );
             newCard.cardFace.parent = cardGroup;
@@ -52,7 +61,9 @@ cardGame.start().then( () => {
     }
 
     cards.forEach( ( card, index ) => {
-        card.setFaceTo( cardNameMap[ index ].name );
+        const cardNameMapElement = cardNameMap[ index ];
+        if(!cardNameMapElement) return;
+        card.setFaceTo( cardNameMapElement.name );
         card.flip();
     } );
 
@@ -63,9 +74,11 @@ cardGame.start().then( () => {
     firstCard.cardFace.pickable = false;
     firstCard.cardBack.visibility = false;
 
-    cardGroup.position.x = -42;
-    cardGroup.position.y = 93.33;
-    cardGroup.position.z = -15;
+    const scale = 0.8;
+    cardGroup.scaling.set(scale,scale,scale);
+    cardGroup.position.x = -72;
+    cardGroup.position.y = 115;
+    cardGroup.position.z = -20;
 
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;

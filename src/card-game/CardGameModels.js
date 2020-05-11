@@ -26,7 +26,7 @@ export class CardGameModels extends AsyncLoader {
     async setupAsyncObjects(){
         // await this.setupAsyncScene();
         // await this.setupAsyncCardEvolution();
-        // await this.setupAsyncCard();
+        await this.setupAsyncCard();
         await this.setupAsyncTable();
         await this.setupAsyncChair();
         await this.setupAsyncChip();
@@ -176,11 +176,13 @@ export class CardGameModels extends AsyncLoader {
         const card = await BABYLON.SceneLoader.ImportMeshAsync( '', '/', 'card.2mesh.glb', scene );
         const cardMeshes = card.meshes;
 
-        const scale = 10;
-
-        cardMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
+        // const scale = 10;
+        //
+        // cardMeshes.forEach( mesh => mesh.scaling.set( scale, scale, scale ) );
 
         this.cardMeshes = cardMeshes;
+        // this.cardAtlasTexture = await this.loadTextureAsync( `/models/standard/card/cards.dd11b.jpg` );
+        this.cardAtlasTexture = await this.loadTextureAsync( `/cards.atlas.png` );
 
     }
 

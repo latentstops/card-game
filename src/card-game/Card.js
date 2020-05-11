@@ -153,8 +153,8 @@ export class Card {
 
         if(!cardFaceOrigin || !cardBackOrigin) return;
 
-        const cardFace = cardFaceOrigin;//.clone();
-        const cardBack = cardBackOrigin;//.clone();
+        const cardFace = cardFaceOrigin.clone();
+        const cardBack = cardBackOrigin.clone();
 
         const cardFaceMaterial = cardFace.material;
         const cardBackMaterial = cardBack.material;

@@ -32,29 +32,29 @@ export class CardAtlas {
 
         let f = 0;
 
-        for ( let y = 0; y <= 4; y++ ) {
+        for ( let y = 0; y <= 5; y++ ) {
 
-            for ( let x = 0; x <= 10; x++ ) {
+            for ( let x = 0; x <= 8; x++ ) {
 
-                if ( f < 13 ) {
+                if ( f < 9 ) {
 
                     map.push( { name: getName( `x`, f + 1 ), args: [ x, y ] } );
 
-                } else if ( f === 13 ) {
+                } else if ( f === 12 ) {
 
                     map.push( { name: `backSide`, args: [ x, y ] } );
 
-                } else if ( f > 13 && f <= 13 + 13 ) {
+                } else if ( f > 12 && f <= 18 ) {
 
-                    map.push( { name: getName( `q`, f - 13 ), args: [ x, y ] } );
+                    map.push( { name: getName( `q`, f - 12 ), args: [ x, y ] } );
 
-                } else if ( f > 26 && f <= 26 + 13 ) {
+                } else if ( f > 18 && f <= 21 + 9 ) {
 
-                    map.push( { name: getName( `s`, f - 26 ), args: [ x, y ] } );
+                    map.push( { name: getName( `s`, f - 24 ), args: [ x, y ] } );
 
-                } else if ( f > 39 && f <= 39 + 13 ) {
+                } else if ( f > 27 && f <= 27 + 9 ) {
 
-                    map.push( { name: getName( `g`, f - 39 ), args: [ x, y ] } );
+                    map.push( { name: getName( `g`, f - 36 ), args: [ x, y ] } );
 
                 }
 
@@ -67,10 +67,10 @@ export class CardAtlas {
         function getName( prefix, num ){
             const real = num + 1;
             const numMap = {
-                11: 'A',
-                12: 'J',
-                13: 'K',
-                14: 'Q',
+                1: 'A',
+                2: 'J',
+                3: 'K',
+                4: 'Q',
             };
             return [ prefix, numMap[ real ] || real ].join( '' );
         }
@@ -82,8 +82,8 @@ export class CardAtlas {
     }
 
     setupUVOffsets(){
-        const cardWidth = 92;
-        const cardHeight = 128;
+        const cardWidth = 113.777777;
+        const cardHeight = 158.33333;
 
         const texture = this.texture;
 
@@ -117,7 +117,7 @@ export class CardAtlas {
     }
 
     setFaceByXY( x, y, texture ){
-        const experimentalNumber = 6;
+        const experimentalNumber = 0;
         const correctedY = experimentalNumber - y;
 
         this.setFrameToCardFaceSide( texture, x, correctedY );
@@ -133,7 +133,8 @@ export class CardAtlas {
         const vOffset = this.vOffset;
         const scale = vOffset;
 
-        texture.uScale = texture.vScale = scale;
+        texture.uScale = -1;
+        texture.vScale = 1;
         texture.uOffset = x * uOffset;
         texture.vOffset = y * vOffset;
     }
