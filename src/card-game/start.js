@@ -77,7 +77,7 @@ cardGame.start().then( () => {
     const scale = 0.8;
     cardGroup.scaling.set(scale,scale,scale);
     cardGroup.position.x = -72;
-    cardGroup.position.y = 115;
+    cardGroup.position.y = 113;
     cardGroup.position.z = -20;
 
     cardGame.cards = cards;
