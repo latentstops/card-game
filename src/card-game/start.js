@@ -88,8 +88,8 @@ cardGame.start().then( () => {
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
 
-    cardGame.cancelAnim = flipRandom();
-    // cardGame.cancelAnim = flipWave();
+    // cardGame.cancelAnim = flipRandom();
+    cardGame.cancelAnim = flipWave();
 } );
 
 function flipWave( interval = 80 ){
@@ -125,8 +125,6 @@ function flipWave( interval = 80 ){
         const cards = cardGame.cards;
         const cardsClone = Array.apply( null, cards );
         const cardsMatrix = [];
-
-        cardsClone.shift();
 
         while ( cardsClone.length ) {
             const cards13 = cardsClone.splice( 0, 13 );
