@@ -3,7 +3,12 @@ import { cardNameMap } from './deps' ;
 export class CardAtlas {
 
     getBackSide(){
-        return this.getTextureByCardName( 'backside' );
+        const texture =  this.getTextureByCardName( 'backside' );
+
+        texture.uOffset = -0.444;
+        texture.vOffset = 0;
+
+        return texture;
     }
 
     getTextureByCardName( name ){

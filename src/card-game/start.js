@@ -88,7 +88,7 @@ cardGame.start().then( () => {
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
 
-    // cardGame.cancelAnim = flipRandom();
+    cardGame.cancelAnim = flipRandom();
     // cardGame.cancelAnim = flipWave();
 } );
 

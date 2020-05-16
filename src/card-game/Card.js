@@ -64,7 +64,7 @@ export class Card {
     rotationToFront(){
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToFront",
-            "rotation.z",
+            "rotation.x",
             60,
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
@@ -72,11 +72,11 @@ export class Card {
         cardRotateAnimation.setKeys( [
             {
                 frame: 0,
-                value: 3 * Math.PI
+                value: Math.PI / 2
             },
             {
                 frame: 10,
-                value: 0
+                value: -Math.PI / 2
             }
         ] );
 
@@ -86,7 +86,7 @@ export class Card {
     rotationToBack(){
         const cardRotateAnimation = new BABYLON.Animation(
             "rotateToBack",
-            "rotation.z",
+            "rotation.x",
             60,
             BABYLON.Animation.ANIMATIONTYPE_FLOAT,
             BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
@@ -99,7 +99,7 @@ export class Card {
             },
             {
                 frame: 10,
-                value: 3 * Math.PI
+                value: Math.PI / 2
             }
         ] );
 
@@ -112,7 +112,7 @@ export class Card {
 
         if(!cardBack) return;
     
-        const backSideTexture = this.atlas.getTextureByCardName( name );
+        const backSideTexture = this.atlas.getBackSide();
 
         material.diffuseTexture = backSideTexture;
 
@@ -152,6 +152,11 @@ export class Card {
         const cardBackOrigin = cardMeshes[ 2 ];
 
         if(!cardFaceOrigin || !cardBackOrigin) return;
+        cardFaceOrigin.rotationQuaternion = null;
+        cardFaceOrigin.rotation.x = -Math.PI / 2;
+
+        cardBackOrigin.rotationQuaternion = null;
+        cardBackOrigin.rotation.x = -Math.PI / 2;
 
         const cardFace = cardFaceOrigin.clone();
         const cardBack = cardBackOrigin.clone();
