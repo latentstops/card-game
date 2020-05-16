@@ -33,7 +33,8 @@ cardGame.start().then( () => {
     chipGroups.forEach( group => {
         group.chips.forEach( chip => {
             chip.mesh.rotationQuaternion = null;
-            chip.mesh.rotation.x = -3 * Math.PI / 4;
+            chip.mesh.rotation.x = -Math.PI / 2;
+            // chip.mesh.rotation.x = -3 * Math.PI / 4;
         } );
     } );
 
@@ -43,8 +44,13 @@ cardGame.start().then( () => {
 
     const cardGroup = new BABYLON.TransformNode();
 
-    const cardNameMap = card.atlas.cardNameMap;
-    const cards = [ card ];
+    const cards = [];
+    const calod = [
+        "g2","g3","g4","g5","g6","g7","g8","g9","g10","gj","gq","gk","ga",
+        "x2","x3","x4","x5","x6","x7","x8","x9","x10","xj","xq","xk","xa",
+        "q2","q3","q4","q5","q6","q7","q8","q9","q10","qj","qq","qk","qa",
+        "s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","sa",
+    ];
 
     for ( let i = 0; i < 4; i++ ) {
 
@@ -61,18 +67,17 @@ cardGame.start().then( () => {
     }
 
     cards.forEach( ( card, index ) => {
-        const cardNameMapElement = cardNameMap[ index ];
-        if(!cardNameMapElement) return;
-        card.setFaceTo( cardNameMapElement.name );
+        const name = calod[ index ];
+        card.setFaceTo( name );
         card.flip();
     } );
 
     cardGame.models.ground.parent = cardGroup;
 
-    const firstCard = cards[ 0 ];
-    firstCard.cardFace.visibility = false;
-    firstCard.cardFace.pickable = false;
-    firstCard.cardBack.visibility = false;
+    // const firstCard = cards[ 0 ];
+    // firstCard.cardFace.visibility = false;
+    // firstCard.cardFace.pickable = false;
+    // firstCard.cardBack.visibility = false;
 
     const scale = 0.8;
     cardGroup.scaling.set(scale,scale,scale);

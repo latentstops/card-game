@@ -20,7 +20,7 @@ export class ChipGroupsController {
 
         const texture = typeMap[ type ] || defaultTexture;
         const materialClone = material.clone();
-
+        texture.uScale = -1;
         materialClone.albedoTexture = texture;
         mesh.material = materialClone;
 

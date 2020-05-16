@@ -106,13 +106,13 @@ export class Card {
         this.animRotateToBack = cardRotateAnimation;
     }
 
-    setBack(){
+    setBack(name = 'backside'){
         const material = this.material;
         const cardBack = this.cardBack;
 
         if(!cardBack) return;
     
-        const backSideTexture = this.atlas.getTextureByCardName( 'backside' );
+        const backSideTexture = this.atlas.getTextureByCardName( name );
 
         material.diffuseTexture = backSideTexture;
 
@@ -161,8 +161,8 @@ export class Card {
 
         cardFace.visibility = true;
         cardBack.visibility = true;
-        cardFace.addChild( cardBack );
         cardFace.isPickable = true;
+        cardFace.addChild( cardBack );
 
         this.cardFace = cardFace;
         this.cardBack = cardBack;
