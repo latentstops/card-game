@@ -12,7 +12,7 @@ export class Game {
         await this.callChildLoadMethod();
         this.beforeRender();
         this.render();
-        this.applyMotionBlurEffect();
+        // this.applyMotionBlurEffect();
         // this.showDebugLayerIfExists();
     }
 
