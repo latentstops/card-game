@@ -5,3 +5,4 @@ export { utils, cardNameMap };
 export * from '../utils';
 export * from '../Game';
 export * from '../AsyncLoader';
+export * from '../Group';

@@ -31,7 +31,7 @@ cardGame.start().then( () => {
     var chipGroups = cardGame.chipGroupsController.groups;
 
     chipGroups.forEach( group => {
-        group.chips.forEach( chip => {
+        group.items.forEach( chip => {
             chip.mesh.rotationQuaternion = null;
             chip.mesh.rotation.x = -Math.PI / 2;
             // chip.mesh.rotation.x = -3 * Math.PI / 4;
@@ -88,8 +88,8 @@ cardGame.start().then( () => {
     cardGame.cards = cards;
     cardGame.cardGroup = cardGroup;
 
-    // cardGame.cancelAnim = flipRandom();
-    cardGame.cancelAnim = flipWave();
+    cardGame.cancelAnim = flipRandom();
+    // cardGame.cancelAnim = flipWave();
 } );
 
 function flipWave( interval = 80 ){

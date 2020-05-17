@@ -1,22 +1,25 @@
 import { Game } from "./deps";
 import { CardGameModels } from "./CardGameModels";
 import { Paths } from "./Paths";
-import { Card } from "./Card";
-import { Chip } from "./Chip";
-import { ChipGroup } from "./ChipGroup";
-import { ChipGroupsController } from "./ChipGroupsController";
+import { Card, CardGroup } from "./Card";
+import { Chip, ChipGroup, ChipGroupsController } from "./Chip";
 
 export class CardGame extends Game {
 
     constructor( config ){
         super(config);
         this.chipGroups = [];
+        this.cardGroups = [];
     }
 
     setup(){
         super.setup();
         this.setupGameModels();
         this.connectHandlers();
+    }
+
+    setupCardGroup(){
+        this.cardGroup = new CardGroup( this );
     }
 
     setupChipGroup(){
@@ -63,6 +66,7 @@ export class CardGame extends Game {
         this.setupChip();
         this.setupChipGroup();
         this.setupChipController();
+        this.setupCardGroup();
     }
 
     connectHandlers(){

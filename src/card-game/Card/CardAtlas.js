@@ -1,4 +1,4 @@
-import { cardNameMap } from './deps' ;
+import { cardNameMap } from '../deps' ;
 
 export class CardAtlas {
 
