@@ -8,6 +8,9 @@ export class ChipGroupsController {
         const material = mesh.material;
         const defaultTexture = chipTextures[ 0 ];
 
+        /**
+         * TODO: Move this to Chip class
+         */
         const typeMap = {
             1: chipTextures[0],
             5: chipTextures[1],
@@ -32,7 +35,6 @@ export class ChipGroupsController {
         this.chip = root.chip;
         this.origin = root.chipGroup;
         this.chipTextures = root.models.chipTextures;
-
         this.params = [
             {
                 position: { x: 0, y: 111.5, z: 0 }
@@ -73,7 +75,7 @@ export class ChipGroupsController {
 
         params.forEach( param => {
             const group = origin.clone();
-            const groupNode =group.node;
+            const groupNode = group.node;
             Object.assign( groupNode.rotation, param.rotation );
             Object.assign( groupNode.position, param.position );
             groups.push( group );

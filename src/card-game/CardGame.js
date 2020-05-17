@@ -1,7 +1,7 @@
 import { Game } from "./deps";
 import { CardGameModels } from "./CardGameModels";
 import { Paths } from "./Paths";
-import { Card, CardGroup } from "./Card";
+import { Card, CardGroup, CardGroupsController } from "./Card";
 import { Chip, ChipGroup, ChipGroupsController } from "./Chip";
 
 export class CardGame extends Game {
@@ -16,6 +16,10 @@ export class CardGame extends Game {
         super.setup();
         this.setupGameModels();
         this.connectHandlers();
+    }
+
+    setupCardGroupsController(){
+        this.cardGroupsController = new CardGroupsController( this );
     }
 
     setupCardGroup(){
@@ -40,7 +44,7 @@ export class CardGame extends Game {
         this.models = new CardGameModels( this );
     };
 
-    setupChipController(){
+    setupChipGroupsController(){
         this.chipGroupsController = new ChipGroupsController( this );
     }
 
@@ -65,8 +69,9 @@ export class CardGame extends Game {
         this.setupCard();
         this.setupChip();
         this.setupChipGroup();
-        this.setupChipController();
+        this.setupChipGroupsController();
         this.setupCardGroup();
+        this.setupCardGroupsController();
     }
 
     connectHandlers(){

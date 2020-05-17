@@ -4,9 +4,6 @@ export class Card {
 
     clone(){
         const card = new Card( this.root );
-
-        card.position.x += this.position.x + 7;
-
         return card;
     }
 
@@ -174,6 +171,7 @@ export class Card {
         this.cardMeshes = cardMeshes;
         this.cardFaceMaterial = cardFaceMaterial;
         this.cardBackMaterial = cardBackMaterial;
+        this.mesh = cardFace;
     }
 
     setupCardAtlas(){

@@ -27,5 +27,15 @@ export class ChipGroup extends Group {
             this.add( newChip );
         } );
     }
+    onAdd(item, lastItem){
+        const step = this.step;
+        const lastItemMesh = lastItem.mesh;
+        const lastItemMeshPosition = lastItemMesh.position;
+        const meshPosition = item.mesh.position;
+        const meshRotation = item.mesh.rotation;
+
+        meshPosition.y = lastItemMeshPosition.y + step;
+        meshRotation.z = Math.random();
+    }
 
 }

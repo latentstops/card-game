@@ -83,4 +83,38 @@ export class DevCodes {
 
     }
 
+    circleEquation(){
+        var card = cardGame.card;
+
+        cardGame.cardGroupsController.setCardsInGroup( card.clone(), 1 );
+        cardGame.cardGroupsController.setCardsInGroup( card.clone(), 2 );
+        cardGame.cardGroupsController.setCardsInGroup( card.clone(), 3 );
+        cardGame.cardGroupsController.setCardsInGroup( card.clone(), 4 );
+        cardGame.cardGroupsController.setCardsInGroup( card.clone(), 5 );
+
+        // var r1 = 50;
+        // var r2 = 75;
+        // var interval = 20;
+        // var step = 0.4;
+        // var start = 0;
+
+        // var positions = [
+        //     createPos(cardGame.cardGroupsController.groups[1],  2 * (Math.PI / 5) ),
+        //     createPos(cardGame.cardGroupsController.groups[2],  1 * (Math.PI / 5) ),
+        //     createPos(cardGame.cardGroupsController.groups[3],  0 * (Math.PI / 5) ),
+        //     createPos(cardGame.cardGroupsController.groups[4],  -1 * (Math.PI / 5) ),
+        //     createPos(cardGame.cardGroupsController.groups[5],  -2 * (Math.PI / 5) ),
+        // ]
+
+        // function createPos(group, angle){
+        //     var groupNode = group.node;
+        //     var z = r1 * Math.cos( angle );
+        //     var x = r2 * Math.sin( angle );
+        //     var pos = { x, z, y: 112 };
+        //     Object.assign(groupNode.position,pos);
+
+        //     return pos;
+        // };
+    }
+
 }

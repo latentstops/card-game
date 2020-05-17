@@ -71,13 +71,14 @@ export class Group {
 
         if ( thisIsFirstItem ) return items.push( item );
 
-        const lastItemMesh = lastItem.mesh;
-        const lastItemMeshPosition = lastItemMesh.position;
-        const meshPosition = mesh.position;
-
-        meshPosition.y = lastItemMeshPosition.y + step;
+        this.callChildOnAddMethod( item, lastItem );
 
         return items.push( item );
+    }
+
+    callChildOnAddMethod( item, lastItem ){
+        this.onAdd && 
+        this.onAdd( item, lastItem );
     }
 
     clone(){

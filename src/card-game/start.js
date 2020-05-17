@@ -12,14 +12,20 @@ window.BABYLON = BABYLON;
 window.cardGame = new CardGame( { canvas: 'canvas' } );
 
 cardGame.start().then( () => {
+    const calod = [
+        "g2","g3","g4","g5","g6","g7","g8","g9","g10","gj","gq","gk","ga",
+        "x2","x3","x4","x5","x6","x7","x8","x9","x10","xj","xq","xk","xa",
+        "q2","q3","q4","q5","q6","q7","q8","q9","q10","qj","qq","qk","qa",
+        "s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","sa",
+    ];
+    const getRandomCardName = () => calod[ Math.round( Math.random() * calod.length  ) - 1 ];
+    // chips
     var chipTypes = [ 1,5,25,100,500 ];
 
     Array(8).fill().map( (_, index) => {
         const count = Math.round( Math.random() * 50 );
         const type = chipTypes[ Math.round( Math.random() * chipTypes.length - 1) ];
         const pointNum = index + 1;
-
-        console.log( count, type, pointNum );
 
         cardGame.chipGroupsController.setChipsInGroup(
             count,
@@ -34,23 +40,35 @@ cardGame.start().then( () => {
         group.items.forEach( chip => {
             chip.mesh.rotationQuaternion = null;
             chip.mesh.rotation.x = -Math.PI / 2;
-            // chip.mesh.rotation.x = -3 * Math.PI / 4;
         } );
     } );
 
-    // return;
+    // Cards
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 0 );
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 0 );
+
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 1 );
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 1 );
+
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 2 );
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 2 );
+
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 3 );
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 3 );
+
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 4 );
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 4 );
+
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 5 );
+    cardGame.cardGroupsController.addNewCard( getRandomCardName(), 5 );
+
+    return;
     const card = cardGame.card;
     if(!card) return;
 
     const cardGroup = new BABYLON.TransformNode();
 
     const cards = [];
-    const calod = [
-        "g2","g3","g4","g5","g6","g7","g8","g9","g10","gj","gq","gk","ga",
-        "x2","x3","x4","x5","x6","x7","x8","x9","x10","xj","xq","xk","xa",
-        "q2","q3","q4","q5","q6","q7","q8","q9","q10","qj","qq","qk","qa",
-        "s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","sa",
-    ];
 
     for ( let i = 0; i < 4; i++ ) {
 
