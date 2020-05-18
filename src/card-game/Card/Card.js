@@ -117,6 +117,7 @@ export class Card {
     }
 
     setFaceTo( name ){
+        this.name = name;
         const material = this.material;
         const mesh = this.cardFace;
 

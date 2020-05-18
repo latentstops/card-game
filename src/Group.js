@@ -54,6 +54,7 @@ export class Group {
         delete items[ index ];
 
         scene.removeMesh( item.mesh );
+        this.callChildAfterAddMethod();
     }
 
     add( item ){
@@ -69,16 +70,27 @@ export class Group {
 
         mesh.parent = node;
 
-        if ( thisIsFirstItem ) return items.push( item );
+        if ( thisIsFirstItem ) {
+            items.push( item );
+            this.callChildAfterAddMethod(item, lastItem);
+            return;
+        }
 
         this.callChildOnAddMethod( item, lastItem );
 
-        return items.push( item );
+        items.push( item );
+
+        this.callChildAfterAddMethod(item, lastItem);
     }
 
     callChildOnAddMethod( item, lastItem ){
         this.onAdd && 
         this.onAdd( item, lastItem );
+    }
+
+    callChildAfterAddMethod(item, lastItem){
+        this.afterAdd &&
+        this.afterAdd( item, lastItem );
     }
 
     clone(){
