@@ -51,7 +51,8 @@ export class Group {
         const scene = this.scene;
         const index = items.indexOf( item );
 
-        delete items[ index ];
+        // delete items[ index ];
+        items.splice( index, 1 );
 
         scene.removeMesh( item.mesh );
         this.callChildAfterAddMethod();

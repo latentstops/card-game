@@ -1,4 +1,4 @@
-import { Group } from '../deps';
+import { Group, last } from '../deps';
 
 export class CardGroup extends Group {
     constructor( root ){
@@ -6,6 +6,8 @@ export class CardGroup extends Group {
         this.step = 13;
     }
     onAdd(item, lastItem){
+        this.lastItem = lastItem;
+
         const step = this.step;
         const lastItemMesh = lastItem.mesh;
         const lastItemMeshPosition = lastItemMesh.position;
@@ -33,18 +35,52 @@ export class CardGroup extends Group {
     updatePointDisplay(){
         this.removePointMesh();
         this.createPointDisplay();
+        this.animatePointMesh();
     }
 
-    removePointMesh(){
+    animatePointMesh(){
+        const pointsMesh = this.pointsMesh;
         const scene = this.scene;
-        const pointMesh = this.pointsMesh;
-        if(!pointMesh) return;
-        scene.removeMesh( pointMesh );
+
+        if( !pointsMesh ) return;
+        const startPositionY = pointsMesh.position.y;
+
+        const upDownAnimation = new BABYLON.Animation(
+            "upDown",
+            "position.y",
+            60,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_CYCLE
+        );
+        upDownAnimation.setKeys( [
+            {
+                frame: 0,
+                value: startPositionY
+            },
+            {
+                frame: 75,
+                value: startPositionY + 1
+            },
+            {
+                frame: 150,
+                value: startPositionY
+            }
+        ] );
+
+        pointsMesh.animations = [ upDownAnimation ];
+        scene.beginAnimation( pointsMesh, 0, 150, true );
     }
 
     createPointDisplay(){
         const num = `${ this.points }`;
         this.setPointDisplayNumber(num);
+    }
+
+    removePointMesh(){
+        const scene = this.scene;
+        const pointsMesh = this.pointsMesh;
+        if(!pointsMesh) return;
+        scene.removeMesh( pointsMesh );
     }
 
     setPointDisplayNumber(num){
