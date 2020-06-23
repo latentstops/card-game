@@ -3,6 +3,7 @@ import { CardGameModels } from "./CardGameModels";
 import { Paths } from "./Paths";
 import { Card, CardGroup, CardGroupsController } from "./Card";
 import { Chip, ChipGroup, ChipGroupsController } from "./Chip";
+import { CardGameAnimator } from "./CardGameAnimator";
 
 export class CardGame extends Game {
 
@@ -16,6 +17,10 @@ export class CardGame extends Game {
         super.setup();
         this.setupGameModels();
         this.connectHandlers();
+    }
+
+    setupCardGameAnimator(){
+        this.animator = new CardGameAnimator( this );
     }
 
     setupCardGroupsController(){
@@ -72,6 +77,7 @@ export class CardGame extends Game {
         this.setupChipGroupsController();
         this.setupCardGroup();
         this.setupCardGroupsController();
+        this.setupCardGameAnimator();
     }
 
     connectHandlers(){

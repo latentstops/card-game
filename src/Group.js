@@ -46,16 +46,23 @@ export class Group {
         return lastItem;
     }
 
+
     remove( item ){
-        const items = this.items;
         const scene = this.scene;
+
+        this.detach( item );
+        scene.removeMesh( item.mesh );
+
+        this.callChildAfterAddMethod();
+    }
+
+    detach( item ){
+        const items = this.items;
         const index = items.indexOf( item );
 
-        // delete items[ index ];
-        items.splice( index, 1 );
+        delete items[index];
 
-        scene.removeMesh( item.mesh );
-        this.callChildAfterAddMethod();
+        return item;
     }
 
     add( item ){

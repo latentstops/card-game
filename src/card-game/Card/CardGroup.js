@@ -5,6 +5,25 @@ export class CardGroup extends Group {
         super( root, [], CardGroup );
         this.step = 13;
     }
+    detach( card ){
+        super.detach( card );
+
+        const cardMesh = card.cardFace;
+        const cardParent = cardMesh.parent;
+
+        if( !cardParent ) return;
+
+        const cardParentPos = cardParent.position;
+        const cardMeshPos = cardMesh.position;
+        const actualPos = cardMeshPos.add( cardParentPos );
+
+        cardMesh.parent = null;
+
+        Object.assign( cardMeshPos, actualPos );
+        
+        this.updatePointDisplay();
+    }
+
     onAdd(item, lastItem){
         this.lastItem = lastItem;
 
@@ -24,16 +43,20 @@ export class CardGroup extends Group {
         this.updatePointDisplay();
     }
     get points(){
-        const items = this.items;
-        const points = items
+        const cards = this.items;
+        const points = cards
             .map( ( { name } ) => Number( name.substr( 1, 2 ) ) || 10 )
-            .reduce( ( a, b ) => a + b );
+            .reduce( ( a, b ) => a + b, 0 );
 
         return points;
     }
 
     updatePointDisplay(){
+        const items = this.items;
+
         this.removePointMesh();
+        if( !items.filter(Boolean).length) return;
+
         this.createPointDisplay();
         this.animatePointMesh();
     }
@@ -58,7 +81,7 @@ export class CardGroup extends Group {
                 value: startPositionY
             },
             {
-                frame: 75,
+                frame: 30,
                 value: startPositionY + 1
             },
             {
