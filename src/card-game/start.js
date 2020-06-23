@@ -10,6 +10,9 @@ Object.assign( window, utils );
 
 window.BABYLON = BABYLON;
 window.cardGame = new CardGame( { canvas: 'canvas' } );
+window.ondblclick = function(){
+    cardGame.animator.animateCardsCollection();
+};
 
 cardGame.start().then( () => {
     const calod = [
