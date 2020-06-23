@@ -112,8 +112,8 @@ export class CardGameAnimator {
 
     resetPositions(){
         const prevPositions = this.prevPositions;
-        const cards = this.cards;
+        const cards = this.prevCards;
 
-        cards.forEach( (card,i) => card.position.set(...Object.values(prevPositions[i])) );
+        cards.forEach( (card,i) => Object.assign(card.position,prevPositions) );
     }
 }

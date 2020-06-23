@@ -18,7 +18,7 @@ cardGame.start().then( () => {
         "q2","q3","q4","q5","q6","q7","q8","q9","q10","qj","qq","qk","qa",
         "s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","sa",
     ];
-    const getRandomCardName = () => calod[ Math.round( Math.random() * calod.length  ) - 1 ];
+    const getRandomCardName = () => calod[ Math.round( Math.random() * calod.length - 1  ) ];
     // chips
     var chipTypes = [ 1,5,25,100,500 ];
 
