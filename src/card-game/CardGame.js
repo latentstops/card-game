@@ -86,7 +86,7 @@ export class CardGame extends Game {
     }
 
     pickCardOnPointerEvents(){
-        return;
+        // return;
         const scene = this.scene;
 
         let startingPoint = null;
@@ -98,10 +98,12 @@ export class CardGame extends Game {
             const rightClick = event.which === 3;
             const hit = pickInfo.hit;
             const pickedMeshIsGround = pickInfo.pickedMesh === ground;
+            const pickedMeshIsNotCard = !pickInfo.pickedMesh?.id?.includes('card');
+            const current = getGroundPosition();
 
             switch ( type ) {
                 case BABYLON.PointerEventTypes.POINTERDOWN:
-                    if ( !hit || pickedMeshIsGround ) return;
+                    if ( !hit || pickedMeshIsGround || pickedMeshIsNotCard ) return;
 
                     if ( rightClick ) {
                         card.flip( pickInfo.pickedMesh );
@@ -128,15 +130,14 @@ export class CardGame extends Game {
                 case BABYLON.PointerEventTypes.POINTERMOVE:
                     if ( !startingPoint ) return;
 
-                    const current = getGroundPosition();
-
                     if ( !current ) return;
 
                     /**
                      * The most interesting part
                      * @type {Vector3}
                      */
-                    const diff = current.subtract( startingPoint );
+                    let diff = current.subtract( startingPoint );
+                    diff = diff.multiply( new BABYLON.Vector3(0.7,1,0.7) );
 
                     this.pickedMesh.position.addInPlace( diff );
 
@@ -154,7 +155,9 @@ export class CardGame extends Game {
                     break;
                 case BABYLON.PointerEventTypes.POINTERDOUBLETAP:
                     // console.log("POINTER DOUNBLE TAP");
-                    this.card.flip( pickInfo.pickedMesh );
+                    // this.card.flip( pickInfo.pickedMesh );
+                    const actual = current.multiply( new BABYLON.Vector3(0.7,1,0.7) );
+                    this.animator.animateCardsCollection(actual);
                     break;
             }
         } );

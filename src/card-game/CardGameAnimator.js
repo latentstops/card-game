@@ -5,7 +5,9 @@ export class CardGameAnimator {
         this.cardGroupsController = root.cardGroupsController;
     }
 
-    animateCardsCollection(){
+    animateCardsCollection(position){
+        this.cardsCollectionPoint = position || new BABYLON.Vector3( 0, 113, 0 );
+
         this.setupCards();
 
         if( this.prevPositions ){
@@ -57,6 +59,10 @@ export class CardGameAnimator {
 
     setupCards(){
         const cardGroupsController = this.cardGroupsController;
+        const destinationPosition = this.cardsCollectionPoint;
+
+        destinationPosition.y = 113;
+
         const cards = [];
 
         cardGroupsController.groups.forEach( group => {
@@ -94,11 +100,11 @@ export class CardGameAnimator {
                 },
                 {
                     frame: 15,
-                    value: new BABYLON.Vector3( 0, 113, 0 )
+                    value: destinationPosition
                 }
             ] );
 
-            var easingFunction = new BABYLON.QuadraticEase()
+            var easingFunction = new BABYLON.QuadraticEase();
 
             easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
 
@@ -117,3 +123,79 @@ export class CardGameAnimator {
         cards.forEach( (card,i) => Object.assign(card.position,prevPositions) );
     }
 }
+
+
+/*
+function setupCardCollectAnimation( cardMesh ){
+            const startPosition = cardMesh.position;
+
+            const animX = new BABYLON.Animation(
+                "collect",
+                "position.x",
+                60,
+                BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+                BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+            );
+
+            animX.setKeys( [
+                {
+                    frame: 0,
+                    value: startPosition
+                },
+                {
+                    frame: 15,
+                    value: destinationPosition.x
+                }
+            ] );
+
+            const animY = new BABYLON.Animation(
+                "collect",
+                "position.y",
+                60,
+                BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+                BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+            );
+
+            animY.setKeys( [
+                {
+                    frame: 0,
+                    value: startPosition
+                },
+                {
+                    frame: 15,
+                    value: destinationPosition.y
+                }
+            ] );
+
+            const animZ = new BABYLON.Animation(
+                "collect",
+                "position.z",
+                60,
+                BABYLON.Animation.ANIMATIONTYPE_VECTOR3,
+                BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT
+            );
+
+            animZ.setKeys( [
+                {
+                    frame: 0,
+                    value: startPosition
+                },
+                {
+                    frame: 15,
+                    value: destinationPosition.z
+                }
+            ] );
+
+            var easingFunction = new BABYLON.QuadraticEase();
+
+            easingFunction.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+
+            animX.setEasingFunction(easingFunction);
+            animY.setEasingFunction(easingFunction);
+            animZ.setEasingFunction(easingFunction);
+
+            cardMesh.animations = [ animX, animY, animZ ];
+
+            return cardMesh;
+        }
+* */
