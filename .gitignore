@@ -2,7 +2,7 @@
 .idea
 .tmp
 node_modules
-dist
+
 yarn-error.log
 yarn.lock
 Extensions
