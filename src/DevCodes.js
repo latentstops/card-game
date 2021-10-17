@@ -1,5 +1,5 @@
-import { Test } from "./test/Test";
-import { RobotController } from "./robot/RobotController";
+import { Test } from "./test";
+import { RobotController } from "./robot";
 
 export class DevCodes {
     constructor( game ){
@@ -29,11 +29,6 @@ export class DevCodes {
         const cancelAnimation = () => cancelAnimationFrame( requestAnimationFrameId );
         const animateAndCancelAfterMs = ( ms = 1000 ) => ( animate(), setTimeout( cancelAnimation, ms ) );
 
-        //animateAndCancelAfterMs();
-
-        // const cardMeshNames = tableMeshes.map( mesh => mesh.name ).filter( name => name.toLowerCase().includes('card') );
-        // const cardMeshes = tableMeshes.filter( mesh => cardMeshNames.includes(mesh.name) );
-        // const visibleCardMeshes = cardMeshes.filter( m => m.isVisible );
         const cardFirstShoe = tableMeshes.find( m => m.name === 'card_firstshoe' );
         const card = cardFirstShoe;
     }
@@ -91,30 +86,6 @@ export class DevCodes {
         cardGame.cardGroupsController.setCardsInGroup( card.clone(), 3 );
         cardGame.cardGroupsController.setCardsInGroup( card.clone(), 4 );
         cardGame.cardGroupsController.setCardsInGroup( card.clone(), 5 );
-
-        // var r1 = 50;
-        // var r2 = 75;
-        // var interval = 20;
-        // var step = 0.4;
-        // var start = 0;
-
-        // var positions = [
-        //     createPos(cardGame.cardGroupsController.groups[1],  2 * (Math.PI / 5) ),
-        //     createPos(cardGame.cardGroupsController.groups[2],  1 * (Math.PI / 5) ),
-        //     createPos(cardGame.cardGroupsController.groups[3],  0 * (Math.PI / 5) ),
-        //     createPos(cardGame.cardGroupsController.groups[4],  -1 * (Math.PI / 5) ),
-        //     createPos(cardGame.cardGroupsController.groups[5],  -2 * (Math.PI / 5) ),
-        // ]
-
-        // function createPos(group, angle){
-        //     var groupNode = group.node;
-        //     var z = r1 * Math.cos( angle );
-        //     var x = r2 * Math.sin( angle );
-        //     var pos = { x, z, y: 112 };
-        //     Object.assign(groupNode.position,pos);
-
-        //     return pos;
-        // };
     }
 
 }

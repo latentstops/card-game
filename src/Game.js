@@ -9,14 +9,14 @@ export class Game {
 
 
     async start(){
-        await this.callChildLoadMethod();
+        await this.callChildLifeCycleMethods();
         this.beforeRender();
         this.render();
         // this.applyMotionBlurEffect();
         // this.showDebugLayerIfExists();
     }
 
-    async callChildLoadMethod(){
+    async callChildLifeCycleMethods(){
         const engine = this.engine;
 
         engine.displayLoadingUI();

@@ -15,26 +15,28 @@ window.ondblclick = function(){
 };
 
 cardGame.start().then( () => {
+    // return;
     const calod = [
         "g2","g3","g4","g5","g6","g7","g8","g9","g10","gj","gq","gk","ga",
         "x2","x3","x4","x5","x6","x7","x8","x9","x10","xj","xq","xk","xa",
         "q2","q3","q4","q5","q6","q7","q8","q9","q10","qj","qq","qk","qa",
         "s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","sa",
     ];
-    const getRandomCardName = () => calod[ Math.round( Math.random() * (calod.length - 1)  ) ];
+    const rnd = () => Math.random();
+    const getRandomCardName = () => calod[ Math.round( rnd() * calod.length - 1  ) ];
     // chips
     var chipTypes = [ 1,5,25,100,500 ];
 
-    Array(8).fill().map( (_, index) => {
-        const count = Math.round( Math.random() * 50 );
-        const type = chipTypes[ Math.round( Math.random() * chipTypes.length - 1) ];
+    Array(8).fill(0).forEach( (_, index) => {
+        const count = Math.round( rnd() * 50 );
+        const chipTypesLength = chipTypes.length;
+        const oneOfCardTypesIndex = rnd() * chipTypesLength;
+        const chipTypeIndex = Math.round( oneOfCardTypesIndex - 1);
+
+        const type = chipTypes[ chipTypeIndex ];
         const pointNum = index + 1;
 
-        cardGame.chipGroupsController.setChipsInGroup(
-            count,
-            type,
-            pointNum
-        )
+        cardGame.chipGroupsController.setChipsInGroup( count, type, pointNum );
     });
 
     var chipGroups = cardGame.chipGroupsController.groups;
@@ -113,7 +115,7 @@ cardGame.start().then( () => {
     // cardGame.cancelAnim = flipWave();
 } );
 
-function flipWave( interval = 80 ){
+function flipWave( interval = 130 ){
     const cardsMatrix = getCardsMatrix();
     const rowLength = cardsMatrix[ 0 ].length;
 
@@ -121,6 +123,7 @@ function flipWave( interval = 80 ){
 
     let start = 0;
     let timeoutId = null;
+    let back = false;
 
     wave();
 
@@ -129,11 +132,15 @@ function flipWave( interval = 80 ){
     function wave(){
         const cards = getCardsColumn( start );
 
-        cards.forEach( card => card.flip() );
+        cards[0] && cards.forEach( card => card.flip() );
 
-        start++;
+        back ? start-- : start++;
 
-        if ( start === rowLength ) start = 0;
+        if ( start === rowLength ) {
+            back = true;
+        } else if(start === -1){
+            back = false;
+        }
 
         timeoutId = setTimeout( wave, interval );
     }

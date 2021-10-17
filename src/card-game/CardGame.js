@@ -9,6 +9,7 @@ export class CardGame extends Game {
 
     constructor( config ){
         super(config);
+        // this.scene.clearColor = new BABYLON.Color3(0.8, 0.8, 0.8);
         this.chipGroups = [];
         this.cardGroups = [];
     }
@@ -86,7 +87,7 @@ export class CardGame extends Game {
     }
 
     pickCardOnPointerEvents(){
-        // return;
+
         const scene = this.scene;
 
         let startingPoint = null;

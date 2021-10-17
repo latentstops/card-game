@@ -1,11 +1,11 @@
-var path = require('path');
-var express = require('express');
-var app = express();
-app.use(express.static('dist'));
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname + '/dist/index.html'));
-});
+const path = require('path');
+const express = require('express');
 
-app.listen(80, function () {
-  console.log('Example app listening on port 3000!');
-});
+const port = 80;
+const app = express();
+
+app.use(express.static('dist'));
+
+// app.get('/card-game', (req, res) => res.sendFile(path.join(__dirname + '/dist/index.html')));
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
