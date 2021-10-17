@@ -6,6 +6,6 @@ const app = express();
 
 app.use(express.static('dist'));
 
-// app.get('/card-game', (req, res) => res.sendFile(path.join(__dirname + '/dist/index.html')));
+app.get('/black-jack', (req, res) => res.sendFile(path.join(__dirname + '/black-jack.html')));
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
