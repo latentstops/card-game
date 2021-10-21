@@ -127,9 +127,9 @@ export class Game {
         const camera = scene.activeCamera;
 
         deepAssign( camera, {
-            radius: 600,
-            lowerRadiusLimit: 0.000001,
-            upperRadiusLimit: Infinity,
+            radius: 427,
+            // lowerRadiusLimit: 0.000001,
+            // upperRadiusLimit: Infinity,
             wheelDeltaPercentage: 0.01,
             autoRotation: false,
             beta: Math.PI / 4,
@@ -137,6 +137,15 @@ export class Game {
             minZ: 1,
             useAutoRotationBehavior: false
         } );
+
+        camera.lowerAlphaLimit = 0;
+        camera.upperAlphaLimit = Math.PI;
+
+        camera.lowerBetaLimit = 0;
+        camera.upperBetaLimit = Math.PI / 3;
+
+        camera.upperRadiusLimit = 427;
+        camera.lowerRadiusLimit = 280;
 
         this.camera = camera;
     }

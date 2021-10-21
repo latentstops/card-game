@@ -23,9 +23,9 @@ cardGame.start().then( () => {
         "s2","s3","s4","s5","s6","s7","s8","s9","s10","sj","sq","sk","sa",
     ];
     const rnd = () => Math.random();
-    const getRandomCardName = () => calod[ Math.round( rnd() * calod.length - 1  ) ];
+    const getRandomCardName = () => calod[ Math.round( rnd() * (calod.length - 1)  ) ];
     // chips
-    var chipTypes = [ 1,5,25,100,500 ];
+    const chipTypes = [ 1, 5, 25, 100, 500 ];
 
     Array(8).fill(0).forEach( (_, index) => {
         const count = Math.round( rnd() * 50 );
@@ -39,7 +39,7 @@ cardGame.start().then( () => {
         cardGame.chipGroupsController.setChipsInGroup( count, type, pointNum );
     });
 
-    var chipGroups = cardGame.chipGroupsController.groups;
+    const chipGroups = cardGame.chipGroupsController.groups;
 
     chipGroups.forEach( group => {
         group.items.forEach( chip => {

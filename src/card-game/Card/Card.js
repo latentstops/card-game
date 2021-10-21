@@ -160,7 +160,10 @@ export class Card {
         const cardBack = cardBackOrigin.clone();
 
         const cardFaceMaterial = cardFace.material;
+        cardFaceMaterial.specularColor = BABYLON.Color3.White();
         const cardBackMaterial = cardBack.material;
+        cardBackMaterial.specularIntensity = BABYLON.Color3.White();
+
 
         cardFace.visibility = true;
         cardBack.visibility = true;

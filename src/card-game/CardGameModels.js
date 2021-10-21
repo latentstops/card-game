@@ -24,6 +24,7 @@ export class CardGameModels extends AsyncLoader {
     }
 
     async setupAsyncObjects(){
+        await this.setupAsyncEnvSphere();
         // await this.setupAsyncScene();
         // await this.setupAsyncCardEvolution();
         await this.setupAsyncCard();
@@ -158,6 +159,32 @@ export class CardGameModels extends AsyncLoader {
         this.tableMeshes = tableMeshes;
         this.tableClothMaterial = tableClothMaterial;
         this.tableClothDiffuseTexture = tableClothDiffuseTexture;
+    }
+
+    async setupAsyncEnvSphere(){
+        const scene = this.scene;
+
+        const envSphere = BABYLON.MeshBuilder.CreateSphere('envSphere', { diameter: 850, sideOrientation: BABYLON.Mesh.BACKSIDE }, scene);
+        const sphereMaterial = new BABYLON.StandardMaterial('envSphereMaterial', scene);
+        sphereMaterial.diffuseTexture = new BABYLON.Texture(`/event-space-panorama.jpg`, scene);
+
+        envSphere.rotation.z = Math.PI;
+        envSphere.position.y = 40;
+
+        envSphere.material = sphereMaterial;
+
+        const floorMaterial = new BABYLON.StandardMaterial('floorMaterial', scene);
+        floorMaterial.diffuseTexture = new BABYLON.Texture(`/floor.jpg`, scene);
+        floorMaterial.diffuseTexture.uScale = 10;
+        floorMaterial.diffuseTexture.vScale = 10;
+        floorMaterial.specularColor.set(0, 0, 0);
+
+        const envPlane = BABYLON.Mesh.CreatePlane('envPlane', 1000, scene)
+        envPlane.material = floorMaterial;
+        envPlane.rotation.x = Math.PI / 2
+
+        this.envPlane = envPlane;
+        this.envSphere = envSphere;
     }
 
     async setupAsyncScene(){
