@@ -144,7 +144,7 @@ export class Game {
         camera.lowerBetaLimit = 0;
         camera.upperBetaLimit = Math.PI / 3;
 
-        camera.upperRadiusLimit = 427;
+        camera.upperRadiusLimit = 500;
         camera.lowerRadiusLimit = 280;
 
         this.camera = camera;
